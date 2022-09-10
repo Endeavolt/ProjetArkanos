@@ -49,6 +49,22 @@ public class @InputSettings : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ShootUp"",
+                    ""type"": ""Button"",
+                    ""id"": ""3ccae9ec-8c18-4b67-9428-40bcb7200d3b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""ShootDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""6573453d-31ce-4e7f-adfe-91dd085661cc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -280,6 +296,28 @@ public class @InputSettings : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""547f3d98-c7d3-40ec-9eee-1558bdb4c27a"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ShootUp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fe8687b7-16b5-4d1a-84e9-4757a1025709"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ShootDown"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -861,6 +899,8 @@ public class @InputSettings : IInputActionCollection, IDisposable
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
+        m_Player_ShootUp = m_Player.FindAction("ShootUp", throwIfNotFound: true);
+        m_Player_ShootDown = m_Player.FindAction("ShootDown", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -926,6 +966,8 @@ public class @InputSettings : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_Jump;
+    private readonly InputAction m_Player_ShootUp;
+    private readonly InputAction m_Player_ShootDown;
     public struct PlayerActions
     {
         private @InputSettings m_Wrapper;
@@ -934,6 +976,8 @@ public class @InputSettings : IInputActionCollection, IDisposable
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
+        public InputAction @ShootUp => m_Wrapper.m_Player_ShootUp;
+        public InputAction @ShootDown => m_Wrapper.m_Player_ShootDown;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -955,6 +999,12 @@ public class @InputSettings : IInputActionCollection, IDisposable
                 @Jump.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnJump;
+                @ShootUp.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootUp;
+                @ShootUp.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootUp;
+                @ShootUp.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootUp;
+                @ShootDown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootDown;
+                @ShootDown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootDown;
+                @ShootDown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootDown;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -971,6 +1021,12 @@ public class @InputSettings : IInputActionCollection, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @ShootUp.started += instance.OnShootUp;
+                @ShootUp.performed += instance.OnShootUp;
+                @ShootUp.canceled += instance.OnShootUp;
+                @ShootDown.started += instance.OnShootDown;
+                @ShootDown.performed += instance.OnShootDown;
+                @ShootDown.canceled += instance.OnShootDown;
             }
         }
     }
@@ -1131,6 +1187,8 @@ public class @InputSettings : IInputActionCollection, IDisposable
         void OnLook(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnShootUp(InputAction.CallbackContext context);
+        void OnShootDown(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

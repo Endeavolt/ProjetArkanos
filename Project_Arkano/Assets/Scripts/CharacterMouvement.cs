@@ -24,6 +24,7 @@ namespace Player
         private float m_debugJumpDistance;
         private Vector3 m_debugJumpDir;
 
+
         #region InputPlayer
 
         public void MouvementInput(InputAction.CallbackContext ctx)
@@ -196,7 +197,7 @@ namespace Player
             }
         }
 
-        private bool IsRightSide()
+        public bool IsRightSide()
         {
             return (transform.position.x <= 2);
         }
