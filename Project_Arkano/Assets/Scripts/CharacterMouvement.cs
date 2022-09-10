@@ -17,7 +17,8 @@ namespace Player
 
         private bool m_isJumping;
         private Vector3 m_jumpDirection;
-        
+        public bool m_rightSide = false;
+
         #region InputPlayer
 
         public void MouvementInput(InputAction.CallbackContext ctx)
@@ -28,7 +29,7 @@ namespace Player
 
         public void JumpInput(InputAction.CallbackContext ctx)
         {
-            if (ctx.started &&  !m_isJumping) Jump();
+            if (ctx.started && !m_isJumping) Jump();
         }
 
 
@@ -36,7 +37,24 @@ namespace Player
 
         public void Update()
         {
-            if (!m_isJumping) AvatarMouvement();
+            if (!m_isJumping)
+            {
+                AvatarMouvement();
+        
+                if (m_rightSide != IsRightSide())
+                {
+                    m_rightSide = IsRightSide();
+                    if (m_rightSide)
+                    {
+                        TurnAvatar(180);
+                        
+                    }
+                    if (!m_rightSide)
+                    {
+                        TurnAvatar(180);
+                    }
+                }
+            }
         }
 
         #region Deplacement
@@ -148,6 +166,22 @@ namespace Player
         private Vector3 IsJumpDirectionValid()
         {
             return m_directionInput == Vector3.zero ? transform.up : m_directionInput;
+        }
+
+        #endregion
+
+        #region Orientation
+
+        private bool IsRightSide()
+        {
+            return (transform.position.x <= 2);
+           
+
+        }
+
+        private void TurnAvatar(float angle)
+        {
+            transform.rotation = Quaternion.AngleAxis(angle, transform.up) * transform.rotation;
         }
 
         #endregion
