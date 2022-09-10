@@ -17,6 +17,7 @@ namespace Player
 
         private bool m_isJumping;
         private Vector3 m_jumpDirection;
+        
         #region InputPlayer
 
         public void MouvementInput(InputAction.CallbackContext ctx)
@@ -27,7 +28,7 @@ namespace Player
 
         public void JumpInput(InputAction.CallbackContext ctx)
         {
-            if (ctx.started) Jump();
+            if (ctx.started &&  !m_isJumping) Jump();
         }
 
 
@@ -36,7 +37,6 @@ namespace Player
         public void Update()
         {
             if (!m_isJumping) AvatarMouvement();
-            
         }
 
         #region Deplacement
@@ -44,6 +44,7 @@ namespace Player
         private void AvatarMouvement()
         {
             OrientedMoveDirection();
+            m_directionInput = EightDirectionTransformation(m_directionInput);
             m_direction = EightDirectionTransformation(m_direction);
             AddInputToDirection();
             if (!IsObstacle())
@@ -55,11 +56,12 @@ namespace Player
         private void OrientedMoveDirection()
         {
             RaycastHit hit = new RaycastHit();
-            if (IsGrounded(-transform.up,ref hit, 1.1f))
+            if (IsGrounded(-transform.up, ref hit, 1.1f))
             {
                 float angle = GetNormalAngle(hit.normal);
                 m_direction = ChangeMovementDirection(angle);
                 m_direction.Normalize();
+                m_isJumping = false;
             }
 
         }
@@ -85,13 +87,20 @@ namespace Player
 
         private Vector3 EightDirectionTransformation(Vector3 direction)
         {
-            direction.x = Mathf.Round(direction.x);
-            direction.y = Mathf.Round(direction.y);
+            float xSign = Mathf.Sign(direction.x);
+            float ySign = Mathf.Sign(direction.y);
+            direction.x = Mathf.Abs(direction.x) > (Mathf.PI / 8.0f) ? xSign * 1 : 0;
+            direction.y = Mathf.Abs(direction.y) > (Mathf.PI / 8.0f) ? ySign * 1 : 0;
+
+            direction.Normalize();
             return direction;
         }
 
         private void AddInputToDirection()
         {
+            m_directionInput.x = Mathf.Abs(m_directionInput.x) < 1.0f ? 0 : m_directionInput.x;
+            m_directionInput.y = Mathf.Abs(m_directionInput.y) < 1.0f ? 0 : m_directionInput.y;
+
             m_direction.x *= m_directionInput.x;
             m_direction.y *= m_directionInput.y;
         }
@@ -105,7 +114,7 @@ namespace Player
 
         private void FixedUpdate()
         {
-            if(m_isJumping)
+            if (m_isJumping)
             {
                 AvatarJump();
             }
@@ -114,7 +123,7 @@ namespace Player
         private void AvatarJump()
         {
             RaycastHit hit = new RaycastHit();
-            if (!IsGrounded(transform.up,ref hit,jumpSpeed * 2*Time.deltaTime))
+            if (!IsGrounded(transform.up, ref hit, jumpSpeed * 2 * Time.deltaTime))
             {
                 transform.position = transform.position + m_jumpDirection * jumpSpeed * Time.deltaTime;
             }
@@ -123,7 +132,7 @@ namespace Player
                 m_isJumping = false;
                 float angle = Vector3.SignedAngle(transform.up, hit.normal, Vector3.forward);
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + angle);
-                transform.position = transform.position  + (hit.point-transform.position).normalized * ((hit.point - transform.position).magnitude -1) ;
+                transform.position = transform.position + (hit.point - transform.position).normalized * ((hit.point - transform.position).magnitude - 1);
             }
         }
 
@@ -132,7 +141,7 @@ namespace Player
             m_isJumping = true;
             m_jumpDirection = IsJumpDirectionValid();
             m_jumpDirection = EightDirectionTransformation(m_jumpDirection);
-            float angle = Vector3.SignedAngle(m_jumpDirection.normalized,transform.up, -transform.forward);
+            float angle = Vector3.SignedAngle(m_jumpDirection.normalized, transform.up, -transform.forward);
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + angle);
         }
 
