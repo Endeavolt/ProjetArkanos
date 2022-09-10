@@ -10,14 +10,19 @@ namespace Player
     {
         public float speed = 5;
         public float jumpSpeed = 25;
-
+        [Header("Debug")]
+        public bool activeDebug = false;
 
         private Vector3 m_directionInput;
         private Vector3 m_direction;
 
-        private bool m_isJumping;
+        public bool m_isJumping;
         private Vector3 m_jumpDirection;
-        public bool m_rightSide = false;
+        private bool m_rightSide = false;
+
+        private float m_debugJumpTime;
+        private float m_debugJumpDistance;
+        private Vector3 m_debugJumpDir;
 
         #region InputPlayer
 
@@ -40,20 +45,9 @@ namespace Player
             if (!m_isJumping)
             {
                 AvatarMouvement();
-        
-                if (m_rightSide != IsRightSide())
-                {
-                    m_rightSide = IsRightSide();
-                    if (m_rightSide)
-                    {
-                        TurnAvatar(180);
-                        
-                    }
-                    if (!m_rightSide)
-                    {
-                        TurnAvatar(180);
-                    }
-                }
+                AvatarOrientation();
+
+
             }
         }
 
@@ -143,11 +137,16 @@ namespace Player
             RaycastHit hit = new RaycastHit();
             if (!IsGrounded(transform.up, ref hit, jumpSpeed * 2 * Time.deltaTime))
             {
+                if (m_jumpDirection == Vector3.zero) m_isJumping = false;
                 transform.position = transform.position + m_jumpDirection * jumpSpeed * Time.deltaTime;
+                m_debugJumpDistance += jumpSpeed * Time.deltaTime;
+                m_debugJumpTime += Time.deltaTime;
             }
             else
             {
+                if (activeDebug) JumpDebug();
                 m_isJumping = false;
+                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 0, transform.rotation.eulerAngles.z);
                 float angle = Vector3.SignedAngle(transform.up, hit.normal, Vector3.forward);
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + angle);
                 transform.position = transform.position + (hit.point - transform.position).normalized * ((hit.point - transform.position).magnitude - 1);
@@ -161,6 +160,8 @@ namespace Player
             m_jumpDirection = EightDirectionTransformation(m_jumpDirection);
             float angle = Vector3.SignedAngle(m_jumpDirection.normalized, transform.up, -transform.forward);
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + angle);
+            m_debugJumpDir = m_jumpDirection;
+
         }
 
         private Vector3 IsJumpDirectionValid()
@@ -168,15 +169,36 @@ namespace Player
             return m_directionInput == Vector3.zero ? transform.up : m_directionInput;
         }
 
+        private void JumpDebug()
+        {
+            Debug.Log("<b>Jump Time :</b> <color=cyan>" + m_debugJumpTime + "</color> <b>Jump Distance :</b><color=cyan>" + m_debugJumpDistance + "</color><b> Jump Direction :</b><color=cyan>" + m_debugJumpDir + "</color>");
+            m_debugJumpDistance = 0.0f;
+            m_debugJumpTime = 0.0f;
+        }
         #endregion
 
         #region Orientation
 
+        private void AvatarOrientation()
+        {
+            if (m_rightSide != IsRightSide())
+            {
+                m_rightSide = IsRightSide();
+                if (m_rightSide)
+                {
+                    TurnAvatar(180);
+
+                }
+                if (!m_rightSide)
+                {
+                    TurnAvatar(180);
+                }
+            }
+        }
+
         private bool IsRightSide()
         {
             return (transform.position.x <= 2);
-           
-
         }
 
         private void TurnAvatar(float angle)

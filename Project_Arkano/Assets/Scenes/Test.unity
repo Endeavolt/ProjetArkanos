@@ -332,7 +332,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5
   jumpSpeed: 75
-  m_rightSide: 0
+  activeDebug: 0
+  m_isJumping: 0
 --- !u!114 &363868803
 MonoBehaviour:
   m_ObjectHideFlags: 0
