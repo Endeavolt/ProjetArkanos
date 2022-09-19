@@ -288,6 +288,17 @@
                 },
                 {
                     "name": "",
+                    "id": "29a56c41-8081-405b-8087-9383fb6588ae",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "547f3d98-c7d3-40ec-9eee-1558bdb4c27a",
                     "path": "<Gamepad>/leftTrigger",
                     "interactions": "",

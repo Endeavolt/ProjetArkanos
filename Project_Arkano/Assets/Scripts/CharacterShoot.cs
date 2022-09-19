@@ -20,8 +20,6 @@ namespace Player
         private bool m_isStrikeUp = false;
         private bool m_isCharging = false;
 
-
-
         private float m_charginTimer = 0.0f;
 
         private CharacterMouvement m_characterMouvement;
