@@ -2,8 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+
 public class GameManager : MonoBehaviour
 {
+    const int PLAYER_MAX = 4;
+
     enum PlayerID
     {
         PlayerOne,
@@ -12,10 +16,16 @@ public class GameManager : MonoBehaviour
         PlayerFour,
     }
 
+
     public int playerToSpwan = 2;
+    public Vector3[] spawnPosition = new Vector3[PLAYER_MAX];
+    [Header("Debug")]
+    public bool previewSpawnPosition = false;
+    public float sphereRadius = 1.0f;
+    public bool IsPlayerNumberSecurity = true;
 
     private PlayerInputManager m_playerInputManager;
-    private int m_playerNumber =  4;
+    private int m_playerNumber = 4;
     private int m_currentPlayerNumber;
     List<InputDevice> devices = new List<InputDevice>();
 
@@ -26,8 +36,27 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         GetAllDevice();
+        if (IsPlayerNumberSecurity) RegulatePlayerNumber();
         SpawnPlayers();
     }
+
+    public void OnDrawGizmos()
+    {
+        ShowEditorSpawnPosition();
+    }
+
+    private void ShowEditorSpawnPosition()
+    {
+        if (previewSpawnPosition)
+        {
+            for (int i = 0; i < PLAYER_MAX; i++)
+            {
+                Gizmos.color = new Color(1.0f - (i * 0.25f), i * 0.25f, 0, 1.0f);
+                Gizmos.DrawSphere(spawnPosition[i], sphereRadius);
+            }
+        }
+    }
+
 
     #region  Players
     private void SpawnPlayers()
@@ -38,11 +67,31 @@ public class GameManager : MonoBehaviour
             m_currentPlayerNumber++;
         }
     }
+
+
+    private void RegulatePlayerNumber()
+    {
+        if (!IsEnoughDevices())
+        {
+            Debug.LogError("<b> Too much player for devives detected. Correct by system </b>");
+            playerToSpwan = devices.Count;
+        }
+    }
+    private bool IsEnoughDevices()
+    {
+        if (devices.Count < playerToSpwan) return false;
+        else return true;
+    }
+
+
+
     private void SpawnPlayer(int index)
     {
         int deviceIndex = GetGampad() == -1 ? GetKeyboard() : GetGampad();
-        m_playerInputManager.JoinPlayer(index,-1,null, GetDevice(deviceIndex));
-        
+
+        PlayerInput pInput = m_playerInputManager.JoinPlayer(index, -1, null, GetDevice(deviceIndex));
+        pInput.transform.position = spawnPosition[index];
+
     }
     public int GetPlayerNumber()
     {
@@ -55,7 +104,8 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < InputSystem.devices.Count; i++)
         {
-            devices.Add(InputSystem.devices[i]);
+            if (InputSystem.devices[i] is Gamepad || InputSystem.devices[i] is Keyboard)
+                devices.Add(InputSystem.devices[i]);
         }
     }
     private int GetGampad()
@@ -78,7 +128,12 @@ public class GameManager : MonoBehaviour
 
     private InputDevice GetDevice(int index)
     {
-           InputDevice device =   devices[index];
+        if (index == -1)
+        {
+            Debug.LogError("No Device available");
+            return null;
+        }
+        InputDevice device = devices[index];
         devices.Remove(device);
         return device;
     }
