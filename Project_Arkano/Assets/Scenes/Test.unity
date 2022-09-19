@@ -330,7 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e89ce6281e515144c8bd6ff4eae44e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerToSpwan: 2
+  playerToSpwan: 4
   spawnPosition:
   - {x: -6.6, y: -4, z: -2}
   - {x: -1.25, y: -4, z: -2}
@@ -338,6 +338,7 @@ MonoBehaviour:
   - {x: 8.92, y: -4, z: -2}
   previewSpawnPosition: 1
   sphereRadius: 0.25
+  IsPlayerNumberSecurity: 1
 --- !u!1 &603954523
 GameObject:
   m_ObjectHideFlags: 0
