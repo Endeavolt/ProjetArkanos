@@ -54,7 +54,7 @@ public class BallBehavior : MonoBehaviour
                 {
                     m_direction = Vector3.Reflect(m_direction.normalized, hit.normal);
                     m_direction.Normalize();
-                    m_score++;
+                    AddBallScore(1);
                     ChangeBallColor(5);
                 }
             }
@@ -63,6 +63,12 @@ public class BallBehavior : MonoBehaviour
         }
     }
 
+
+    private void AddBallScore(int score)
+    {
+        m_score += score;
+        gameManager.ChangeBallScore(m_score);
+    }
     private void DestroyBall()
     {
         if (isDestroy)

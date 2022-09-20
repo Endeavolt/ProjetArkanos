@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public Vector3[] spawnPosition = new Vector3[PLAYER_MAX];
     public Color[] playerColor;
     public GameScore gameScore;
+    public GeneralUI generalUI;
 
     [Header("Debug")]
     public bool previewSpawnPosition = false;
@@ -51,6 +52,11 @@ public class GameManager : MonoBehaviour
     public void OnDrawGizmos()
     {
         ShowEditorSpawnPosition();
+    }
+
+    public void ChangeBallScore(int score)
+    {
+        generalUI.scoreText.text = score.ToString();
     }
 
     private void ShowEditorSpawnPosition()
