@@ -17,6 +17,8 @@ namespace Player
         [Header("Debug")]
         public bool activeDebug = false;
 
+        public PlayerUI playerUI { set; private get; }
+
         private bool m_isStrikeUp = false;
         private bool m_isCharging = false;
 
@@ -46,6 +48,7 @@ namespace Player
         {
             if (m_isCharging)
             {
+                playerUI.FillStrikeImage(m_charginTimer / chargeTime);
                 m_charginTimer += Time.deltaTime;
             }
         }
@@ -92,6 +95,7 @@ namespace Player
             }
             m_charginTimer = 0;
             m_isCharging = false;
+            playerUI.FillStrikeImage(m_charginTimer / chargeTime);
         }
 
         public bool CheckBallCollison(ref BallBehavior ballBehavior)

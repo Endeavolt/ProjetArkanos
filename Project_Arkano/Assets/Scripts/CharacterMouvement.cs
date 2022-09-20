@@ -13,6 +13,8 @@ namespace Player
         [Header("Debug")]
         public bool activeDebug = false;
 
+   
+
         private Vector3 m_directionInput;
         private Vector3 m_direction;
 
@@ -23,7 +25,7 @@ namespace Player
         private float m_debugJumpTime;
         private float m_debugJumpDistance;
         private Vector3 m_debugJumpDir;
-
+ 
 
         #region InputPlayer
 

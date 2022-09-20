@@ -16,9 +16,6 @@ public class GameManager : MonoBehaviour
 {
     const int PLAYER_MAX = 4;
 
-
-
-
     public int playerToSpwan = 2;
     public Vector3[] spawnPosition = new Vector3[PLAYER_MAX];
     public Color[] playerColor;
@@ -106,6 +103,7 @@ public class GameManager : MonoBehaviour
         PlayerInput pInput = m_playerInputManager.JoinPlayer(index, -1, null, GetDevice(deviceIndex));
         pInput.transform.position = spawnPosition[index];
         pInput.GetComponent<MeshRenderer>().material.color = playerColor[index];
+        pInput.GetComponent<Player.CharacterShoot>().playerUI = generalUI.GetPlayerUI(index);
 
     }
     public int GetPlayerNumber()
