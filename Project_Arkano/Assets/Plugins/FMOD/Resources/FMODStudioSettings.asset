@@ -124,15 +124,15 @@ MonoBehaviour:
       Value: {fileID: 0}
       HasValue: 0
   childIdentifiers:
-  - 2fea114e74ecf3c4f920e1d5cc1c4c40
-  - 46fbfdf3fc43db0458918377fd40293e
-  - 0f8eb3f400726694eb47beb1a9f94ce8
-  - b7716510a1f36934c87976f3a81dbf3d
-  - 52eb9df5db46521439908db3a29a1bbb
-  - e7a046c753c3c3d4aacc91f6597f310d
   - 2c5177b11d81d824dbb064f9ac8527da
-  - fd7c55dab0fce234b8c25f6ffca523c1
+  - 46fbfdf3fc43db0458918377fd40293e
   - c88d16e5272a4e241b0ef0ac2e53b73d
+  - e7a046c753c3c3d4aacc91f6597f310d
+  - 0f8eb3f400726694eb47beb1a9f94ce8
+  - 52eb9df5db46521439908db3a29a1bbb
+  - fd7c55dab0fce234b8c25f6ffca523c1
+  - b7716510a1f36934c87976f3a81dbf3d
+  - 2fea114e74ecf3c4f920e1d5cc1c4c40
   outputType: 
   threadAffinities:
     Value: []
@@ -408,8 +408,8 @@ MonoBehaviour:
   SwitchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: 
-  sourceBankPath: 
+  sourceProjectPath: Assets/Sound/SoundV1/SoundV1.fspro
+  sourceBankPath: Assets/Sound/SoundV1/Build
   SourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -430,8 +430,10 @@ MonoBehaviour:
   VirtualChannelSettings: []
   RealChannelSettings: []
   Plugins: []
-  MasterBanks: []
-  Banks: []
+  MasterBanks:
+  - Master
+  Banks:
+  - Sound effect
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
@@ -442,19 +444,19 @@ MonoBehaviour:
   EnableErrorCallback: 0
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
-  HideSetupWizard: 0
+  HideSetupWizard: 1
   Platforms:
-  - {fileID: 6715353639604945365}
-  - {fileID: -1888874181217034463}
-  - {fileID: 652462453506495723}
-  - {fileID: 4918157204853046431}
-  - {fileID: 2449395662919312155}
-  - {fileID: -1726762646045889308}
   - {fileID: -8380858212630171115}
-  - {fileID: 3150161851283408479}
-  - {fileID: -1742862198946950166}
   - {fileID: -7896743503739461546}
   - {fileID: -1932827808748136333}
+  - {fileID: -1888874181217034463}
+  - {fileID: -1742862198946950166}
+  - {fileID: -1726762646045889308}
+  - {fileID: 652462453506495723}
+  - {fileID: 2449395662919312155}
+  - {fileID: 3150161851283408479}
+  - {fileID: 4918157204853046431}
+  - {fileID: 6715353639604945365}
   MigratedPlatforms: 0c000000150000000b0000000a00000009000000120000000800000005000000060000000200000001000000
 --- !u!114 &652462453506495723
 MonoBehaviour:
