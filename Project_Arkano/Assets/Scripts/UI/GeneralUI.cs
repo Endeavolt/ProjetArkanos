@@ -11,7 +11,7 @@ public class GeneralUI : MonoBehaviour
     
     public PlayerUI GetPlayerUI(int id)
     {
-        playerUIs[id].SetIcon(playerIcon[id]);
+        //playerUIs[id].SetIcon(playerIcon[id]);
         playerUIs[id].gameObject.SetActive(true);
         return playerUIs[id];
     }
