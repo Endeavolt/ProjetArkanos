@@ -23,9 +23,11 @@ namespace Player
         private float m_charginTimer = 0.0f;
 
         private CharacterMouvement m_characterMouvement;
+        private PlayerInput m_playerInput;
 
         private void Start()
         {
+            m_playerInput = GetComponent<PlayerInput>();
             m_characterMouvement = GetComponent<CharacterMouvement>();
         }
 
@@ -86,7 +88,7 @@ namespace Player
                 direction = hit.point - ballBehavior.transform.position;
                 direction = new Vector3(direction.x, direction.y, 0);
                 direction.Normalize();
-                ballBehavior.Strike(direction);
+                ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex);
             }
             m_charginTimer = 0;
             m_isCharging = false;

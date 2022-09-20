@@ -4,15 +4,21 @@ using UnityEngine;
 
 public class BallBehavior : MonoBehaviour
 {
-    public Vector3 centre;
+
+    public GameManager gameManager;
+    public PlayerID currentPlayerID;
+    public Vector3 center;
     public float speed = 10;
     public bool isDestroy = false;
+    
     private Vector3 m_direction;
+    private MeshRenderer m_ballRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = centre;
+        m_ballRenderer = GetComponent<MeshRenderer>();
+        transform.position = center;
         InitDirection();
     }
 
@@ -65,9 +71,17 @@ public class BallBehavior : MonoBehaviour
         m_direction = new Vector3(xDir, 0, 0);
     }
 
-    public void Strike(Vector3 direction)
+    public void Strike(Vector3 direction,PlayerID strikerID)
     {
         m_direction = direction.normalized;
+        currentPlayerID = strikerID;
+        ChangeBallColor((int)strikerID);
+    }
+
+    private void ChangeBallColor(int id)
+    {
+        if (id == 5) m_ballRenderer.material.color = Color.white;
+        m_ballRenderer.material.color = gameManager.playerColor[id];
     }
 
 

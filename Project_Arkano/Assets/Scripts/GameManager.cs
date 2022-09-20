@@ -4,17 +4,19 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
+public enum PlayerID
+{
+    PlayerOne = 1, 
+    PlayerTwo = 2 ,
+    PlayerThree = 3,
+    PlayerFour = 4,
+    None =5,
+}
 public class GameManager : MonoBehaviour
 {
     const int PLAYER_MAX = 4;
 
-    enum PlayerID
-    {
-        PlayerOne,
-        PlayerTwo,
-        PlayerThree,
-        PlayerFour,
-    }
+
 
 
     public int playerToSpwan = 2;
