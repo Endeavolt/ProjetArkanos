@@ -333,9 +333,14 @@ MonoBehaviour:
   playerToSpwan: 4
   spawnPosition:
   - {x: -6.6, y: -4, z: -2}
+  - {x: 8.92, y: -4, z: -2}
   - {x: -1.25, y: -4, z: -2}
   - {x: 4.07, y: -4, z: -2}
-  - {x: 8.92, y: -4, z: -2}
+  playerColor:
+  - {r: 0.8396226, g: 0.17030083, b: 0.17030083, a: 1}
+  - {r: 0, g: 1, b: 0.14043546, a: 1}
+  - {r: 0.06132078, g: 0.20839046, b: 1, a: 1}
+  - {r: 0.9433962, g: 0.4672481, b: 0.8574006, a: 1}
   previewSpawnPosition: 1
   sphereRadius: 0.25
   IsPlayerNumberSecurity: 1

@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     public int playerToSpwan = 2;
     public Vector3[] spawnPosition = new Vector3[PLAYER_MAX];
+    public Color[] playerColor;
     [Header("Debug")]
     public bool previewSpawnPosition = false;
     public float sphereRadius = 1.0f;
@@ -51,7 +52,7 @@ public class GameManager : MonoBehaviour
         {
             for (int i = 0; i < PLAYER_MAX; i++)
             {
-                Gizmos.color = new Color(1.0f - (i * 0.25f), i * 0.25f, 0, 1.0f);
+                Gizmos.color = playerColor[i];
                 Gizmos.DrawSphere(spawnPosition[i], sphereRadius);
             }
         }
@@ -91,6 +92,7 @@ public class GameManager : MonoBehaviour
 
         PlayerInput pInput = m_playerInputManager.JoinPlayer(index, -1, null, GetDevice(deviceIndex));
         pInput.transform.position = spawnPosition[index];
+        pInput.GetComponent<MeshRenderer>().material.color = playerColor[index];
 
     }
     public int GetPlayerNumber()
