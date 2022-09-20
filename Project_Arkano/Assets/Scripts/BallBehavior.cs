@@ -10,7 +10,9 @@ public class BallBehavior : MonoBehaviour
     public Vector3 center;
     public float speed = 10;
     public bool isDestroy = false;
-    
+
+    [SerializeField]
+    private int m_score;
     private Vector3 m_direction;
     private MeshRenderer m_ballRenderer;
 
@@ -38,6 +40,8 @@ public class BallBehavior : MonoBehaviour
         transform.position = transform.position + m_direction.normalized * speed * Time.deltaTime;
     }
 
+    public int GetBallScore() { return m_score; }
+
     private void DetectCollision()
     {
         RaycastHit hit = new RaycastHit();
@@ -50,6 +54,8 @@ public class BallBehavior : MonoBehaviour
                 {
                     m_direction = Vector3.Reflect(m_direction.normalized, hit.normal);
                     m_direction.Normalize();
+                    m_score++;
+                    ChangeBallColor(5);
                 }
             }
 
@@ -61,6 +67,7 @@ public class BallBehavior : MonoBehaviour
     {
         if (isDestroy)
         {
+            gameManager.gameScore.AddScore(1, (int)currentPlayerID);
             Destroy(gameObject);
         }
     }
@@ -71,7 +78,7 @@ public class BallBehavior : MonoBehaviour
         m_direction = new Vector3(xDir, 0, 0);
     }
 
-    public void Strike(Vector3 direction,PlayerID strikerID)
+    public void Strike(Vector3 direction, PlayerID strikerID)
     {
         m_direction = direction.normalized;
         currentPlayerID = strikerID;
@@ -80,7 +87,11 @@ public class BallBehavior : MonoBehaviour
 
     private void ChangeBallColor(int id)
     {
-        if (id == 5) m_ballRenderer.material.color = Color.white;
+        if (id == 5)
+        {
+            m_ballRenderer.material.color = Color.white;
+            return;
+        }
         m_ballRenderer.material.color = gameManager.playerColor[id];
     }
 

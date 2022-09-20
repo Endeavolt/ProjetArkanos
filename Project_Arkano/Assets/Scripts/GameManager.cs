@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     public int playerToSpwan = 2;
     public Vector3[] spawnPosition = new Vector3[PLAYER_MAX];
     public Color[] playerColor;
+    public GameScore gameScore;
+
     [Header("Debug")]
     public bool previewSpawnPosition = false;
     public float sphereRadius = 1.0f;
@@ -32,9 +34,12 @@ public class GameManager : MonoBehaviour
     private int m_currentPlayerNumber;
     List<InputDevice> devices = new List<InputDevice>();
 
+
+
     public void Awake()
     {
         m_playerInputManager = GetComponent<PlayerInputManager>();
+        gameScore = new GameScore(m_playerNumber);
     }
     public void Start()
     {
