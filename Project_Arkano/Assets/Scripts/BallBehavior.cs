@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.VFX; //Add ball trail change gradient
+using FMOD.Studio;
+using FMODUnity;
 public class BallBehavior : MonoBehaviour
 {
 
@@ -15,10 +17,17 @@ public class BallBehavior : MonoBehaviour
     private int m_score;
     private Vector3 m_direction;
     private MeshRenderer m_ballRenderer;
+    public int lastPlayerID;
+    public int consecustiveHit;
 
+    private VisualEffect m_trailVfx;//Add ball trail change gradient
+    public EventInstance instance_Bound;
+    [EventRef]
+    public string instance_Bound_Attribution;
     // Start is called before the first frame update
     void Start()
     {
+        m_trailVfx = GetComponentInChildren<VisualEffect>(); //Add ball trail change gradient
         m_ballRenderer = GetComponent<MeshRenderer>();
         transform.position = center;
         InitDirection();
@@ -52,6 +61,22 @@ public class BallBehavior : MonoBehaviour
             {
                 if (hit.collider.tag == "Wall")
                 {
+                    consecustiveHit += 1;
+                    if (!instance_Bound.isValid())
+                    {
+                        instance_Bound = RuntimeManager.CreateInstance(instance_Bound_Attribution);
+                    }
+                        if (consecustiveHit < 3)
+                    {
+                        instance_Bound.setParameterByName("ConsecutiveHit", consecustiveHit);
+                    }
+                    else
+                    {
+                        instance_Bound.setParameterByName("ConsecutiveHit", 3);
+                    }
+                    instance_Bound.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject.transform));
+                    instance_Bound.start();
+                    //instance_Bound.release();
                     m_direction = Vector3.Reflect(m_direction.normalized, hit.normal);
                     m_direction.Normalize();
                     AddBallScore(1);
@@ -86,6 +111,11 @@ public class BallBehavior : MonoBehaviour
 
     public void Strike(Vector3 direction, PlayerID strikerID)
     {
+        if(lastPlayerID != (int)strikerID)
+        {
+            lastPlayerID = (int)strikerID;
+            consecustiveHit = 0;
+        }
         m_direction = direction.normalized;
         currentPlayerID = strikerID;
         ChangeBallColor((int)strikerID);
@@ -98,7 +128,8 @@ public class BallBehavior : MonoBehaviour
             m_ballRenderer.material.color = Color.white;
             return;
         }
-        m_ballRenderer.material.color = gameManager.playerColor[id];
+        //m_ballRenderer.material.color = gameManager.playerColor[id]; //Add ball trail change gradient
+        m_trailVfx.SetGradient("Balltrail_Gradient", gameManager.m_playerAsset.playerHitColorsGradient[id]); //Add ball trail change gradient
     }
 
 

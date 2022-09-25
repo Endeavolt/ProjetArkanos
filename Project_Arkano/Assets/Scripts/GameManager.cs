@@ -32,12 +32,12 @@ public class GameManager : MonoBehaviour
     private int m_currentPlayerNumber;
     List<InputDevice> devices = new List<InputDevice>();
 
+    public Player_AssetData m_playerAsset; //Add player vfx Setting
     [SerializeField] public bool autoLaunch = false;
-
-
 
     public void Awake()
     {
+        m_playerAsset = GetComponent<Player_AssetData>(); //Add player vfx Setting
         m_playerInputManager = GetComponent<PlayerInputManager>();
         gameScore = new GameScore(m_playerNumber);
     }
@@ -110,6 +110,7 @@ public class GameManager : MonoBehaviour
     {
         int deviceIndex = GetGampad() == -1 ? GetKeyboard() : GetGampad();
         PlayerInput pInput = m_playerInputManager.JoinPlayer(index, -1, null, GetDevice(deviceIndex));
+        m_playerAsset.AssignPlayerParameter(index, pInput.gameObject); //Add player vfx Setting
         pInput.transform.position = spawnPosition[index];
         pInput.GetComponent<MeshRenderer>().material.color = playerColor[index];
         pInput.GetComponent<Player.CharacterShoot>().playerUI = generalUI.GetPlayerUI(index);

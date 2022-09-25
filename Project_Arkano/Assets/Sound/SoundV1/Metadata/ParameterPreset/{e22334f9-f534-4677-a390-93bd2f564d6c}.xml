@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{e22334f9-f534-4677-a390-93bd2f564d6c}">
+		<property name="name">
+			<value>ConsecutiveHit</value>
+		</property>
+		<relationship name="folder">
+			<destination>{c0c03817-7ccf-4b5d-83e4-bcd6483325a6}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{7595f722-8645-4e3e-9794-2ab301d7a597}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{7595f722-8645-4e3e-9794-2ab301d7a597}">
+		<property name="maximum">
+			<value>4.2000000000000002</value>
+		</property>
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+	</object>
+</objects>
