@@ -158,6 +158,7 @@ namespace Player
 
         private void Jump()
         {
+            GlobalSoundManager.PlayOneShot(1, transform.position);
             m_isJumping = true;
             m_jumpDirection = IsJumpDirectionValid();
             m_jumpDirection = EightDirectionTransformation(m_jumpDirection);

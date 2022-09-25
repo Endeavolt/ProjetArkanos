@@ -370,6 +370,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   activeDebug: 1
+  instance_Charging_Attribution: event:/Player/Charge
+  instance_Hit_Attribution: event:/Player/Hit
 --- !u!54 &119933406763524976
 Rigidbody:
   m_ObjectHideFlags: 0

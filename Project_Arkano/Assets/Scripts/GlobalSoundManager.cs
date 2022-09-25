@@ -13,6 +13,8 @@ public class GlobalSoundManager : MonoBehaviour
     static string[] OneS_Sound;
     [EventRef]
     public string[] OneS_Sound_Attribution;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,4 +40,6 @@ public class GlobalSoundManager : MonoBehaviour
             Debug.LogWarning("[FMOD] Event not found: " + OneS_Sound[sNumber]);
         }
     }
+
+
 }

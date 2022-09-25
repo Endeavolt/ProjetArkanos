@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FMOD.Studio;
+using FMODUnity;
 
 namespace Player
 {
@@ -27,6 +29,12 @@ namespace Player
         private CharacterMouvement m_characterMouvement;
         private PlayerInput m_playerInput;
 
+        public EventInstance instance_Charging;
+        [EventRef]
+        public string instance_Charging_Attribution;
+        public EventInstance instance_Hit;
+        [EventRef]
+        public string instance_Hit_Attribution;
         private void Start()
         {
             m_playerInput = GetComponent<PlayerInput>();
@@ -35,13 +43,29 @@ namespace Player
 
         public void StrikeUpInput(InputAction.CallbackContext ctx)
         {
+            if (ctx.started)
+            {
+                StartInstance_Charging();
+            }
             if (ctx.performed) ActiveCharging(true);
-            if (ctx.canceled) LaunchStrike();
+            if (ctx.canceled)
+            {
+                LaunchStrike();
+                StopInstance_Charging();
+            }
         }
         public void StrikeDownInput(InputAction.CallbackContext ctx)
         {
+            if (ctx.started)
+            {
+                StartInstance_Charging();
+            }
             if (ctx.performed) ActiveCharging(false);
-            if (ctx.canceled) LaunchStrike();
+            if (ctx.canceled)
+            {
+                LaunchStrike();
+                StopInstance_Charging();
+            }
         }
 
         private void Update()
@@ -85,6 +109,15 @@ namespace Player
                     angle *= -1.0f;
                     angle += 180;
                 }
+                if(!instance_Hit.isValid())
+                {
+                    instance_Hit = RuntimeManager.CreateInstance(instance_Hit_Attribution);
+                }
+                instance_Hit.setParameterByName("ChargeRate", m_charginTimer / chargeTime);
+                instance_Hit.start();
+                instance_Hit.release();
+                //instance_Hit.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                //instance_Hit.release();
                 Vector3 direction = Quaternion.AngleAxis(angle, -Vector3.forward) * Vector3.right;
                 RaycastHit hit = new RaycastHit();
                 Physics.Raycast(center, direction.normalized, out hit, 100.0f, layerMaskObjstacle);
@@ -111,7 +144,25 @@ namespace Player
             }
             return false;
         }
+        public void StartInstance_Charging()
+        {
+            if(!instance_Charging.isValid())
+            {
+                instance_Charging = RuntimeManager.CreateInstance(instance_Charging_Attribution);
+                instance_Charging.start();
+                instance_Charging.release();
+            }
+
+        }
+
+        public void StopInstance_Charging()
+        {
+
+            instance_Charging.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            instance_Charging.release();
+        }
 
     }
+    
 
 }

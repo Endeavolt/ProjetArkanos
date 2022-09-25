@@ -122,8 +122,8 @@ MonoBehaviour:
   m_UISuperCollapsed: 0
   m_UIInfos: {fileID: 114340500867371532}
   m_ParameterInfo:
-  - name: SampleGradient
-    path: SampleGradient
+  - name: Balltrail_Gradient
+    path: Balltrail_Gradient
     tooltip: 
     sheetType: m_Gradient
     realType: Gradient
@@ -131,7 +131,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Gradient, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"colorKeys":[{"color":{"r":3.4537160396575929,"g":14.743831634521485,"b":65.96599578857422,"a":1.0},"time":0.0},{"color":{"r":28.825389862060548,"g":4.859157085418701,"b":309.3669128417969,"a":1.0},"time":0.5153429508209229},{"color":{"r":7.367837905883789,"g":135.94424438476563,"b":351.8145751953125,"a":1.0},"time":0.9970549941062927}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}],"gradientMode":0}'
+      m_SerializableObject: '{"colorKeys":[{"color":{"r":0.567592203617096,"g":1.1441937685012818,"b":1.5135791301727296,"a":1.0},"time":0.0},{"color":{"r":0.13333334028720857,"g":0.4000000059604645,"b":0.7607843279838562,"a":1.0},"time":0.5153429508209229},{"color":{"r":0.31532901525497439,"g":0.7387707829475403,"b":1.1982501745224,"a":1.0},"time":0.9970549941062927}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}],"gradientMode":0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -3134,7 +3134,7 @@ MonoBehaviour:
   m_InputSlots: []
   m_OutputSlots:
   - {fileID: 8926484042661614661}
-  m_ExposedName: SampleGradient
+  m_ExposedName: Balltrail_Gradient
   m_Exposed: 1
   m_Order: 0
   m_Category: 
@@ -3183,7 +3183,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Gradient, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"colorKeys":[{"color":{"r":3.4537160396575929,"g":14.743831634521485,"b":65.96599578857422,"a":1.0},"time":0.0},{"color":{"r":28.825389862060548,"g":4.859157085418701,"b":309.3669128417969,"a":1.0},"time":0.5153429508209229},{"color":{"r":7.367837905883789,"g":135.94424438476563,"b":351.8145751953125,"a":1.0},"time":0.9970549941062927}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}],"gradientMode":0}'
+      m_SerializableObject: '{"colorKeys":[{"color":{"r":0.567592203617096,"g":1.1441937685012818,"b":1.5135791301727296,"a":1.0},"time":0.0},{"color":{"r":0.13333334028720857,"g":0.4000000059604645,"b":0.7607843279838562,"a":1.0},"time":0.5153429508209229},{"color":{"r":0.31532901525497439,"g":0.7387707829475403,"b":1.1982501745224,"a":1.0},"time":0.9970549941062927}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}],"gradientMode":0}'
     m_Space: 2147483647
   m_Property:
     name: o
