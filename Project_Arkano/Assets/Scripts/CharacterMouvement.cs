@@ -13,7 +13,7 @@ namespace Player
         [Header("Debug")]
         public bool activeDebug = false;
 
-   
+        public LayerMask layer;
 
         private Vector3 m_directionInput;
         private Vector3 m_direction;
@@ -214,7 +214,7 @@ namespace Player
 
         private bool IsGrounded(Vector3 direction, ref RaycastHit hit, float distance)
         {
-            return Physics.Raycast(transform.position, direction, out hit, distance);
+            return Physics.Raycast(transform.position, direction, out hit, distance, layer);
         }
     }
 }

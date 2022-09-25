@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e89ce6281e515144c8bd6ff4eae44e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerToSpwan: 2
+  playerToSpwan: 0
   spawnPosition:
   - {x: -6.6, y: -4, z: -2}
   - {x: 8.92, y: -4, z: -2}
@@ -370,6 +370,7 @@ MonoBehaviour:
   sphereRadius: 0.25
   IsPlayerNumberSecurity: 1
   m_playerAsset: {fileID: 0}
+  autoLaunch: 0
 --- !u!114 &585740805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -942,7 +943,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &994374086
 MonoBehaviour:
@@ -1195,7 +1196,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1362634337
 GameObject:
@@ -1376,7 +1377,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1362634341
 MonoBehaviour:
@@ -1890,7 +1891,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1490150304
 MonoBehaviour:
@@ -2601,6 +2602,10 @@ PrefabInstance:
       value: vfxGraph_StylizedSmoke
       objectReference: {fileID: 0}
     - target: {fileID: 458910718530003838, guid: 2bfc67cacb06c734aa5451ba88347beb, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 458910718530003838, guid: 2bfc67cacb06c734aa5451ba88347beb, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
@@ -2733,6 +2738,10 @@ PrefabInstance:
     - target: {fileID: 8600274576790002941, guid: 9e3080bb6526a0b46bf577c2679d623e, type: 3}
       propertyPath: m_Name
       value: Ball
+      objectReference: {fileID: 0}
+    - target: {fileID: 8600274576790002941, guid: 9e3080bb6526a0b46bf577c2679d623e, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8600274576790002942, guid: 9e3080bb6526a0b46bf577c2679d623e, type: 3}
       propertyPath: center.x

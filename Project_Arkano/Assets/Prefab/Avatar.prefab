@@ -330,6 +330,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 6573453d-31ce-4e7f-adfe-91dd085661cc
     m_ActionName: Player/ShootDown[/XInputControllerWindows/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 067111f2-e494-4811-8dcb-bada0af6ca99
+    m_ActionName: UI/Validate[/XInputControllerWindows/buttonSouth,/XInputControllerWindows/buttonSouth,/Keyboard/b]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 69427a83-7ec5-4743-afd0-2d9b520dd669
+    m_ActionName: UI/Return[/Keyboard/n,/XInputControllerWindows/buttonEast,/XInputControllerWindows/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -350,6 +358,9 @@ MonoBehaviour:
   speed: 5
   jumpSpeed: 75
   activeDebug: 0
+  layer:
+    serializedVersion: 2
+    m_Bits: 831
   m_isJumping: 1
 --- !u!114 &119933406763524977
 MonoBehaviour:

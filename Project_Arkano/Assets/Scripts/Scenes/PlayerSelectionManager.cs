@@ -128,7 +128,7 @@ public class PlayerSelectionManager : MonoBehaviour
     private void AddPlayer(int deviceIndex)
     {
         int playerIndex = GetPlayerUiIIndex();
-
+        playerNumber++;
         devicesAttribut.Add(devices[deviceIndex]);
         playersProfilsUI[playerIndex].playerDevice = devices[deviceIndex];
         playersProfilsUI[playerIndex].ChangeProfilState(ProfilState.Wait);
@@ -175,7 +175,7 @@ public class PlayerSelectionManager : MonoBehaviour
             playerInputs[i].transform.SetParent(uiPanel.transform);
             playersProfilsUI[i] = playerInputs[i].GetComponent<ProfilPlayerUI>();
             SetPlayerUI(playersProfilsUI[i], i);
-            playerNumber++;
+           
         }
 
 
@@ -209,7 +209,7 @@ public class PlayerSelectionManager : MonoBehaviour
         bool allReady = true;
         for (int i = 0; i < playerNumber; i++)
         {
-            if (playersProfilsUI[i].profilState != ProfilState.Ready)
+            if (playersProfilsUI[i].profilState == ProfilState.Wait)
             {
                 allReady = false;
             }
