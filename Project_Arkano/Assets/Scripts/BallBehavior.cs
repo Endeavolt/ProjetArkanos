@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.VFX; //Add ball trail change gradient
 public class BallBehavior : MonoBehaviour
 {
 
@@ -16,9 +16,11 @@ public class BallBehavior : MonoBehaviour
     private Vector3 m_direction;
     private MeshRenderer m_ballRenderer;
 
+    private VisualEffect m_trailVfx;//Add ball trail change gradient
     // Start is called before the first frame update
     void Start()
     {
+        m_trailVfx = GetComponentInChildren<VisualEffect>(); //Add ball trail change gradient
         m_ballRenderer = GetComponent<MeshRenderer>();
         transform.position = center;
         InitDirection();
@@ -98,7 +100,8 @@ public class BallBehavior : MonoBehaviour
             m_ballRenderer.material.color = Color.white;
             return;
         }
-        m_ballRenderer.material.color = gameManager.playerColor[id];
+        //m_ballRenderer.material.color = gameManager.playerColor[id]; //Add ball trail change gradient
+        m_trailVfx.SetGradient("Balltrail_Gradient", gameManager.m_playerAsset.playerHitColorsGradient[id]); //Add ball trail change gradient
     }
 
 
