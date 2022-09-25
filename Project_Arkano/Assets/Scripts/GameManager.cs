@@ -6,11 +6,11 @@ using UnityEngine.InputSystem;
 
 public enum PlayerID
 {
-    PlayerOne = 1, 
-    PlayerTwo = 2 ,
+    PlayerOne = 1,
+    PlayerTwo = 2,
     PlayerThree = 3,
     PlayerFour = 4,
-    None =5,
+    None = 5,
 }
 public class GameManager : MonoBehaviour
 {
@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     private int m_currentPlayerNumber;
     List<InputDevice> devices = new List<InputDevice>();
 
+    [SerializeField] public bool autoLaunch = false;
+
 
 
     public void Awake()
@@ -41,8 +43,16 @@ public class GameManager : MonoBehaviour
     }
     public void Start()
     {
+        if (autoLaunch)
+        {
+            StartGame();
+        }
+    }
+
+    public void StartGame()
+    {
         GetAllDevice();
-        if (IsPlayerNumberSecurity) RegulatePlayerNumber();
+        RegulatePlayerNumber();
         SpawnPlayers();
     }
 
@@ -99,7 +109,6 @@ public class GameManager : MonoBehaviour
     private void SpawnPlayer(int index)
     {
         int deviceIndex = GetGampad() == -1 ? GetKeyboard() : GetGampad();
-
         PlayerInput pInput = m_playerInputManager.JoinPlayer(index, -1, null, GetDevice(deviceIndex));
         pInput.transform.position = spawnPosition[index];
         pInput.GetComponent<MeshRenderer>().material.color = playerColor[index];
@@ -115,6 +124,7 @@ public class GameManager : MonoBehaviour
     #region Input Devices
     private void GetAllDevice()
     {
+        devices.Clear();
         for (int i = 0; i < InputSystem.devices.Count; i++)
         {
             if (InputSystem.devices[i] is Gamepad || InputSystem.devices[i] is Keyboard)
