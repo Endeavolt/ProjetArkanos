@@ -18,7 +18,7 @@ public class ProfilPlayerUI : MonoBehaviour
     public Image playerImage;
     public ProfilState profilState = ProfilState.None;
     public InputDevice playerDevice;
-    
+
 
     public void ChangePlayerName(string name)
     {
@@ -39,4 +39,21 @@ public class ProfilPlayerUI : MonoBehaviour
     {
         profilState = profil;
     }
+
+    public void SeActiveUI(bool state)
+    {
+        playerName.enabled = state;
+        instructionText.enabled = state;
+        playerImage.enabled = state;
+    }
+
+    public void ChangerUiState(ProfilState state, Color color, string instruction = null,string playerName = null)
+    {
+        if (playerName != null) ChangePlayerName(playerName);
+        if (instruction != null) ChangePlayerInstruction(instruction);
+        ChangeProfilState(state);
+        ChangePlayerImageColor(color);
+
+    }
+
 }

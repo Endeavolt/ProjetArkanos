@@ -21,6 +21,7 @@ public class PlayerSelectionManager : MonoBehaviour
     private PlayerInput[] playerInputs = new PlayerInput[4];
     private ProfilPlayerUI[] playersProfilsUI = new ProfilPlayerUI[4];
     private GameSceneManager sceneManager;
+    private bool isInputLaunchGame = false;
 
     InputDevice device = null;
     // Start is called before the first frame update
@@ -36,8 +37,9 @@ public class PlayerSelectionManager : MonoBehaviour
     void Update()
     {
         UpdatePlayerProfil();
-        if (ValidateGameLaunch()) LaunchGame();
+        if (ValidateGameLaunch() && isInputLaunchGame && playerNumber>1) LaunchGame();
        
+        isInputLaunchGame = false;
     }
 
     private void GetAllDevice()
@@ -59,13 +61,7 @@ public class PlayerSelectionManager : MonoBehaviour
             if (test!=-1 && !devicesAttribut.Contains(device))
             {
                 AddPlayer(test);
-                for (int j = devicesAttribut.Count; j < devices.Count + devicesAttribut.Count; j++)
-                {
-                    if (playerInputs[j].currentControlScheme == "Gamepad" && !IsAvailableGamepad<Gamepad>())
-                        playerInputs[j].SwitchCurrentControlScheme( "Keyboard&Mouse", GetDevice<Keyboard>());
-                    if (playerInputs[j].currentControlScheme == "Keyboard&Mouse" && !IsAvailableGamepad<Keyboard>())
-                        playerInputs[j].SwitchCurrentControlScheme("Gamepad", GetDevice<Gamepad>());
-                }
+                UpdateFreeDeviceControlScheme();
                 return;
             }
 
@@ -106,12 +102,12 @@ public class PlayerSelectionManager : MonoBehaviour
     {
         if ( playersProfilsUI[index].profilState == ProfilState.Wait)
         {
+            playerNumber--;
             devices.Add(playersProfilsUI[index].playerDevice);
             devicesAttribut.Remove(playersProfilsUI[index].playerDevice);
             playerInputs[index].actions["Return"].started -= ctx => RemovePlayer(index);
-            playersProfilsUI[index].ChangeProfilState(ProfilState.None);
-            playersProfilsUI[index].ChangePlayerImageColor(Color.red);
-            playersProfilsUI[index].ChangePlayerInstruction("Press a touch to add player");
+            playersProfilsUI[index].ChangerUiState(ProfilState.None, Color.red, "Press a touch to add player");
+            playersProfilsUI[index].SeActiveUI(false);
         }
     }
 
@@ -129,17 +125,21 @@ public class PlayerSelectionManager : MonoBehaviour
     {
         int playerIndex = GetPlayerUiIIndex();
         playerNumber++;
-        devicesAttribut.Add(devices[deviceIndex]);
+        
+        playersProfilsUI[playerIndex].SeActiveUI(true);
         playersProfilsUI[playerIndex].playerDevice = devices[deviceIndex];
-        playersProfilsUI[playerIndex].ChangeProfilState(ProfilState.Wait);
+        playersProfilsUI[playerIndex].ChangerUiState(ProfilState.Wait,Color.yellow);
+
         playerInputs[playerIndex].actions["Validate"].started -= ctx => GetDevicePress(ctx);
-        devices.RemoveAt(deviceIndex);
+        playerInputs[playerIndex].actions["Validate"].canceled -= ctx => device = null;
         playerInputs[playerIndex].actions["Return"].started += ctx => RemovePlayer(playerIndex);
+
+        devicesAttribut.Add(devices[deviceIndex]);
+        devices.RemoveAt(deviceIndex);
 
         if (devicesAttribut[devicesAttribut.Count - 1] is Gamepad)
         {
             playerInputs[playerIndex].SwitchCurrentControlScheme("Gamepad", devicesAttribut[devicesAttribut.Count - 1]);
-          
             playersProfilsUI[playerIndex].ChangePlayerInstruction("Press A");
         }
         if (devicesAttribut[devicesAttribut.Count-1] is Keyboard)
@@ -147,16 +147,14 @@ public class PlayerSelectionManager : MonoBehaviour
             playersProfilsUI[playerIndex].ChangePlayerInstruction("Press B");
             playerInputs[playerIndex].SwitchCurrentControlScheme("Keyboard&Mouse", devicesAttribut[devicesAttribut.Count - 1]);
         }
-        playersProfilsUI[playerIndex].ChangePlayerImageColor(Color.yellow);
     }
 
     private void SetPlayerReady(int index)
     {
         if (playerInputs[index].actions["Validate"].triggered && playersProfilsUI[index].profilState == ProfilState.Wait)
         {
-            playersProfilsUI[index].ChangeProfilState(ProfilState.Ready);
-            playersProfilsUI[index].ChangePlayerImageColor(Color.green);
-            playersProfilsUI[index].ChangePlayerInstruction("Press A  or B to launch game");
+            playersProfilsUI[index].ChangerUiState(ProfilState.Ready, Color.green, "Press A  or B to launch game");
+            playerInputs[index].actions["Validate"].started += ctx => isInputLaunchGame = true;
             return;
         }
     }
@@ -165,7 +163,7 @@ public class PlayerSelectionManager : MonoBehaviour
     {
         playerNumber = 0;
         playerInputManager.playerPrefab = UiPlayer;
-        for (int i = 0; i < devices.Count; i++)
+        for (int i = 0; i < devices.Count && i<4; i++)
         {
             if (devices[i] is Gamepad)
                 playerInputs[i] = playerInputManager.JoinPlayer(i, -1, null, devices[i]);
@@ -175,7 +173,6 @@ public class PlayerSelectionManager : MonoBehaviour
             playerInputs[i].transform.SetParent(uiPanel.transform);
             playersProfilsUI[i] = playerInputs[i].GetComponent<ProfilPlayerUI>();
             SetPlayerUI(playersProfilsUI[i], i);
-           
         }
 
 
@@ -187,9 +184,8 @@ public class PlayerSelectionManager : MonoBehaviour
     }
     private void SetPlayerUI(ProfilPlayerUI playersProfilsUI,int index)
     {
-        playersProfilsUI.ChangePlayerName("Player " + (1 + index).ToString());
-        playersProfilsUI.ChangeProfilState(ProfilState.None);
-        playersProfilsUI.ChangePlayerInstruction("Press a touch to add player");
+        playersProfilsUI.ChangerUiState(ProfilState.None, Color.red, "Press a touch to add player", "Player " + (1 + index).ToString());
+        playersProfilsUI.SeActiveUI(false);
     }
 
     bool ValidateGameLaunch()
@@ -221,4 +217,17 @@ public class PlayerSelectionManager : MonoBehaviour
     {
         sceneManager.LoadGame(playerNumber);
     }
+
+    #region Device Gestion
+    private void UpdateFreeDeviceControlScheme()
+    {
+        for (int j = devicesAttribut.Count; j < devices.Count + devicesAttribut.Count; j++)
+        {
+            if (playerInputs[j].currentControlScheme == "Gamepad" && !IsAvailableGamepad<Gamepad>())
+                playerInputs[j].SwitchCurrentControlScheme("Keyboard&Mouse", GetDevice<Keyboard>());
+            if (playerInputs[j].currentControlScheme == "Keyboard&Mouse" && !IsAvailableGamepad<Keyboard>())
+                playerInputs[j].SwitchCurrentControlScheme("Gamepad", GetDevice<Gamepad>());
+        }
+    }
+    #endregion
 }
