@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.InputSystem;
 public class GameSceneManager : MonoBehaviour
 {
     public int playerChoiceScene = 1;
@@ -23,6 +23,7 @@ public class GameSceneManager : MonoBehaviour
     {
         if (!sceneFind && scene.isLoaded)
         {
+            SceneManager.SetActiveScene(scene);
             LauchGameScene();
             return;
         }
@@ -31,10 +32,14 @@ public class GameSceneManager : MonoBehaviour
     private void LoadPlayerChoiceScene()
     {
         SceneManager.LoadScene(playerChoiceScene, LoadSceneMode.Additive);
+        scene = SceneManager.GetSceneAt(playerChoiceScene);
     }
 
     public void LoadGame(int playerNumber)
     {
+        sceneFind = false;
+        scene = SceneManager.GetSceneAt(0);
+        SceneManager.SetActiveScene(scene);
         SceneManager.UnloadSceneAsync(1);
         SceneManager.LoadScene(2, LoadSceneMode.Additive);
         scene = SceneManager.GetSceneAt(2);
@@ -50,7 +55,6 @@ public class GameSceneManager : MonoBehaviour
             {
                 GameManager gm = gameOb[i].GetComponent<GameManager>();
                 gm.playerToSpwan = playerNum;
-                SceneManager.SetActiveScene(scene);
                 gm.StartGame();
                 break;
             }
