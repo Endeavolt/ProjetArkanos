@@ -22,6 +22,7 @@ public class PlayerSelectionManager : MonoBehaviour
     private ProfilPlayerUI[] playersProfilsUI = new ProfilPlayerUI[4];
     private GameSceneManager sceneManager;
     private bool isInputLaunchGame = false;
+    private bool isInputFrameFree  = false;
 
     InputDevice device = null;
     // Start is called before the first frame update
@@ -36,6 +37,8 @@ public class PlayerSelectionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        isInputFrameFree = true;
         UpdatePlayerProfil();
         if (ValidateGameLaunch() && isInputLaunchGame && playerNumber>1) LaunchGame();
        
@@ -100,8 +103,9 @@ public class PlayerSelectionManager : MonoBehaviour
 
     private void  RemovePlayer(int index)
     {
-        if ( playersProfilsUI[index].profilState == ProfilState.Wait)
+        if ( playersProfilsUI[index].profilState == ProfilState.Wait && isInputFrameFree)
         {
+            isInputFrameFree = false;
             playerNumber--;
             devices.Add(playersProfilsUI[index].playerDevice);
             devicesAttribut.Remove(playersProfilsUI[index].playerDevice);
@@ -111,7 +115,26 @@ public class PlayerSelectionManager : MonoBehaviour
         }
     }
 
-    private int GetPlayerUiIIndex()
+    private void UnreadyPlayer(int index)
+    {
+        if (playersProfilsUI[index].profilState == ProfilState.Ready && isInputFrameFree)
+        {
+            isInputFrameFree = false;
+            playersProfilsUI[index].ChangerUiState(ProfilState.Wait, Color.yellow);
+            playerInputs[index].actions["Return"].started -= ctx => UnreadyPlayer(index);
+            if (devicesAttribut[devicesAttribut.Count - 1] is Gamepad)
+            {
+                playersProfilsUI[index].ChangePlayerInstruction("Press A");
+            }
+            if (devicesAttribut[devicesAttribut.Count - 1] is Keyboard)
+            {
+                playersProfilsUI[index].ChangePlayerInstruction("Press B");
+            }
+            playerInputs[index].actions["Return"].started += ctx => RemovePlayer(index);
+        }
+    }
+
+        private int GetPlayerUiIIndex()
     {
         for (int i = 0; i < playersProfilsUI.Length; i++)
         {
@@ -133,6 +156,7 @@ public class PlayerSelectionManager : MonoBehaviour
         playerInputs[playerIndex].actions["Validate"].started -= ctx => GetDevicePress(ctx);
         playerInputs[playerIndex].actions["Validate"].canceled -= ctx => device = null;
         playerInputs[playerIndex].actions["Return"].started += ctx => RemovePlayer(playerIndex);
+        
 
         devicesAttribut.Add(devices[deviceIndex]);
         devices.RemoveAt(deviceIndex);
@@ -155,6 +179,7 @@ public class PlayerSelectionManager : MonoBehaviour
         {
             playersProfilsUI[index].ChangerUiState(ProfilState.Ready, Color.green, "Press A  or B to launch game");
             playerInputs[index].actions["Validate"].started += ctx => isInputLaunchGame = true;
+            playerInputs[index].actions["Return"].started += ctx => UnreadyPlayer(index);
             return;
         }
     }
