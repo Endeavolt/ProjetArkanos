@@ -24,15 +24,25 @@ public class BallBehavior : MonoBehaviour
     public EventInstance instance_Bound;
     [EventRef]
     public string instance_Bound_Attribution;
+    private VisualEffect m_haloVfx;
     // Start is called before the first frame update
+
+
     void Start()
     {
-        m_trailVfx = GetComponentInChildren<VisualEffect>(); //Add ball trail change gradient
+        InitVfx();
         m_ballRenderer = GetComponent<MeshRenderer>();
         transform.position = center;
         InitDirection();
     }
 
+    void InitVfx()
+    {
+        VisualEffect[] vfxTab = GetComponentsInChildren<VisualEffect>();
+        m_trailVfx = vfxTab[0]; //Add ball trail change gradient
+        m_haloVfx = vfxTab[1];
+        Debug.Log(m_trailVfx.name + " = trail. " + m_haloVfx.name + " = halo.");
+    }
     // Update is called once per frame
     void Update()
     {
@@ -132,5 +142,13 @@ public class BallBehavior : MonoBehaviour
         m_trailVfx.SetGradient("Balltrail_Gradient", gameManager.m_playerAsset.playerHitColorsGradient[id]); //Add ball trail change gradient
     }
 
+
+    public IEnumerator StartSfx(float time)
+    {
+        yield return new WaitForSeconds(time);
+        speed *= 1.1f;
+        m_haloVfx.SendEvent("Launch");
+        Debug.Log("Launch vfx Halo");
+    }
 
 }

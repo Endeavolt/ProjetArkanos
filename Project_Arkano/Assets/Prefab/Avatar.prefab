@@ -372,6 +372,7 @@ MonoBehaviour:
   activeDebug: 1
   instance_Charging_Attribution: event:/Player/Charge
   instance_Hit_Attribution: event:/Player/Hit
+  vfxAnimate: {fileID: 6524739715572181477, guid: b62f0d9020eb9064b898c44f318087a2, type: 3}
 --- !u!54 &119933406763524976
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -35,6 +35,7 @@ namespace Player
         public EventInstance instance_Hit;
         [EventRef]
         public string instance_Hit_Attribution;
+        public GameObject vfxAnimate;
         private void Start()
         {
             m_playerInput = GetComponent<PlayerInput>();
@@ -125,6 +126,8 @@ namespace Player
                 direction = new Vector3(direction.x, direction.y, 0);
                 direction.Normalize();
                 ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex);
+                GameObject vfx_obj = Instantiate(vfxAnimate, new Vector3(ballBehavior.transform.position.x, ballBehavior.transform.position.y, -5) , ballBehavior.transform.rotation);
+                StartCoroutine(ballBehavior.StartSfx(0.4f));
             }
             m_charginTimer = 0;
             m_isCharging = false;
