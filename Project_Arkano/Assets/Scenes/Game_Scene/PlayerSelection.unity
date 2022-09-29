@@ -154,7 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   launchGame: 0
-  playerNumber: 2
+  playerActiveNumber: 2
   UiPlayer: {fileID: 4496078410313108694, guid: acd609100e35cab47bb56b2d73a9db7f, type: 3}
   uiPanel: {fileID: 1006370111}
 --- !u!4 &635642249
@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 621567455fd1c4ceb811cc8a00b6a1a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_MaxPlayerCount: -1
   m_AllowJoining: 1
   m_JoinBehavior: 2

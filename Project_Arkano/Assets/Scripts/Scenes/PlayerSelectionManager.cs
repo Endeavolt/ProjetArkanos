@@ -19,17 +19,21 @@ public class PlayerSelectionManager : MonoBehaviour
     private List<InputDevice> devicesAttribut = new List<InputDevice>();
 
     private PlayerInputManager playerInputManager;
-    private PlayerInput[] playerInputs = new PlayerInput[4];
-    private ProfilPlayerUI[] playersProfilsUI = new ProfilPlayerUI[4];
+    private List<PlayerInput> playerInputs = new List<PlayerInput>();
+    private List<ProfilPlayerUI> playersProfilsUI = new List<ProfilPlayerUI>();
     private GameSceneManager sceneManager;
     private bool isInputLaunchGame = false;
     private bool isInputFrameFree = false;
+    private Stack<int> indexPlayerQueue  = new Stack<int>();
 
     InputDevice device = null;
     // Start is called before the first frame update
     void Awake()
     {
-
+        indexPlayerQueue.Push(3);
+        indexPlayerQueue.Push(2);
+        indexPlayerQueue.Push(1);
+        indexPlayerQueue.Push(0);
         playerInputManager = GetComponent<PlayerInputManager>();
         GetAllDevice();
         GeneratePlayerUI();
@@ -153,7 +157,7 @@ public class PlayerSelectionManager : MonoBehaviour
 
     private int GetPlayerUiIIndex()
     {
-        for (int i = 0; i < playersProfilsUI.Length; i++)
+        for (int i = 0; i < playersProfilsUI.Count; i++)
         {
             if (playersProfilsUI[i].profilState == ProfilState.None) return i;
         }
@@ -209,12 +213,12 @@ public class PlayerSelectionManager : MonoBehaviour
         for (int i = 0; i < devices.Count && i < 4; i++)
         {
             if (devices[i] is Gamepad)
-                playerInputs[i] = playerInputManager.JoinPlayer(i, -1, null, devices[i]);
+                playerInputs.Add(playerInputManager.JoinPlayer(indexPlayerQueue.Pop(), -1, null, devices[i]));
             if (devices[i] is Keyboard)
-                playerInputs[i] = playerInputManager.JoinPlayer(i, -1, null, devices[i]);
+                playerInputs.Add(playerInputManager.JoinPlayer(indexPlayerQueue.Pop(), - 1, null, devices[i]));
             playerNumber++;
             playerInputs[i].transform.SetParent(uiPanel.transform);
-            playersProfilsUI[i] = playerInputs[i].GetComponent<ProfilPlayerUI>();
+            playersProfilsUI.Add(  playerInputs[i].GetComponent<ProfilPlayerUI>());
             SetPlayerUI(playersProfilsUI[i], i);
         }
 
@@ -246,7 +250,7 @@ public class PlayerSelectionManager : MonoBehaviour
     private bool IsAllPlayerReady()
     {
         bool allReady = true;
-        for (int i = 0; i < playerActiveNumber; i++)
+        for (int i = 0; i < playersProfilsUI.Count; i++)
         {
             if (playersProfilsUI[i].profilState == ProfilState.Wait)
             {
@@ -277,12 +281,12 @@ public class PlayerSelectionManager : MonoBehaviour
             if (playerNumber < 4)
             {
                 if (device is Gamepad)
-                    playerInputs[playerNumber] = playerInputManager.JoinPlayer(playerNumber, -1, null, device);
+                    playerInputs.Add( playerInputManager.JoinPlayer(indexPlayerQueue.Pop(), -1, null, device));
                 if (device is Keyboard)
-                    playerInputs[playerNumber] = playerInputManager.JoinPlayer(playerNumber, -1, null, device);
+                    playerInputs.Add(playerInputManager.JoinPlayer(indexPlayerQueue.Pop(), -1, null, device));
                 playerInputs[playerNumber].transform.SetParent(uiPanel.transform);
-                playersProfilsUI[playerNumber] = playerInputs[playerNumber].GetComponent<ProfilPlayerUI>();
-                SetPlayerUI(playersProfilsUI[playerNumber], playerNumber);
+                playersProfilsUI.Add (playerInputs[playerNumber].GetComponent<ProfilPlayerUI>());
+                SetPlayerUI(playersProfilsUI[playerNumber], playerInputs[playerNumber].playerIndex +1);
                 playerInputs[playerNumber].actions["Validate"].started += ctx => GetDevicePress(ctx);
                 playerInputs[playerNumber].actions["Validate"].canceled += ctx => device = null;
                 playerNumber++;
@@ -314,8 +318,15 @@ public class PlayerSelectionManager : MonoBehaviour
                 {
                     playerNumber--;
                     Destroy(playerInputs[index].gameObject);
-                    playerInputs[index] = null;
-                    playersProfilsUI[index] = null;
+
+                    indexPlayerQueue.Push(index);
+                    playerInputs.Remove(playerInputs[index]);
+                    playersProfilsUI.Remove(playersProfilsUI[index]);
+                    for (int i = 0; i < playersProfilsUI.Count; i++)
+                    {
+                        playersProfilsUI[i].ChangePlayerName("Player " + (i+1).ToString());
+                       
+                    }
                 }
             }
 
