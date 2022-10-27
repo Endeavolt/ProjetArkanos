@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
     public Color[] playerColor;
     public GameScore gameScore;
     public GeneralUI generalUI;
+    public GameObject ball;
 
     [Header("Debug")]
     public bool previewSpawnPosition = false;
@@ -54,6 +56,14 @@ public class GameManager : MonoBehaviour
         GetAllDevice();
         RegulatePlayerNumber();
         SpawnPlayers();
+        SpawnBall();
+    }
+
+    private void SpawnBall()
+    {
+        GameObject ballGo = GameObject.Instantiate(ball, new Vector3(0, 0, -2.28f), Quaternion.identity);
+        BallBehavior behavior = ballGo.GetComponent<BallBehavior>();
+        behavior.gameManager = this;
     }
 
     public void OnDrawGizmos()

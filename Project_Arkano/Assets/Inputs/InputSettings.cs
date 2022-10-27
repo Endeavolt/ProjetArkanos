@@ -57,6 +57,14 @@ public class @InputSettings : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ResetBall"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb669431-1b38-4ef7-8633-6a7e5eb522d8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -288,6 +296,28 @@ public class @InputSettings : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""ShootDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4880aaa3-f49f-497e-b2b7-70b609608708"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetBall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""31df36dd-bc70-40dd-8263-0ec8b752aec7"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ResetBall"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -930,6 +960,7 @@ public class @InputSettings : IInputActionCollection, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_ShootUp = m_Player.FindAction("ShootUp", throwIfNotFound: true);
         m_Player_ShootDown = m_Player.FindAction("ShootDown", throwIfNotFound: true);
+        m_Player_ResetBall = m_Player.FindAction("ResetBall", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -998,6 +1029,7 @@ public class @InputSettings : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_ShootUp;
     private readonly InputAction m_Player_ShootDown;
+    private readonly InputAction m_Player_ResetBall;
     public struct PlayerActions
     {
         private @InputSettings m_Wrapper;
@@ -1007,6 +1039,7 @@ public class @InputSettings : IInputActionCollection, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @ShootUp => m_Wrapper.m_Player_ShootUp;
         public InputAction @ShootDown => m_Wrapper.m_Player_ShootDown;
+        public InputAction @ResetBall => m_Wrapper.m_Player_ResetBall;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1031,6 +1064,9 @@ public class @InputSettings : IInputActionCollection, IDisposable
                 @ShootDown.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootDown;
                 @ShootDown.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootDown;
                 @ShootDown.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootDown;
+                @ResetBall.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetBall;
+                @ResetBall.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetBall;
+                @ResetBall.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnResetBall;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1050,6 +1086,9 @@ public class @InputSettings : IInputActionCollection, IDisposable
                 @ShootDown.started += instance.OnShootDown;
                 @ShootDown.performed += instance.OnShootDown;
                 @ShootDown.canceled += instance.OnShootDown;
+                @ResetBall.started += instance.OnResetBall;
+                @ResetBall.performed += instance.OnResetBall;
+                @ResetBall.canceled += instance.OnResetBall;
             }
         }
     }
@@ -1227,6 +1266,7 @@ public class @InputSettings : IInputActionCollection, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnShootUp(InputAction.CallbackContext context);
         void OnShootDown(InputAction.CallbackContext context);
+        void OnResetBall(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

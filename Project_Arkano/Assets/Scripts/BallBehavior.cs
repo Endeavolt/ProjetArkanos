@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.VFX; //Add ball trail change gradient
 using FMOD.Studio;
 using FMODUnity;
+using UnityEngine.InputSystem;
+
 public class BallBehavior : MonoBehaviour
 {
 
@@ -12,6 +14,7 @@ public class BallBehavior : MonoBehaviour
     public Vector3 center;
     public float speed = 10;
     public bool isDestroy = false;
+    public bool isStop = false;
 
     [SerializeField]
     private int m_score;
@@ -24,9 +27,13 @@ public class BallBehavior : MonoBehaviour
     public EventInstance instance_Bound;
     [EventRef]
     public string instance_Bound_Attribution;
+
+    public PlayerInput playerInput;
     // Start is called before the first frame update
     void Start()
     {
+        playerInput = FindObjectOfType<PlayerInput>();
+        playerInput.actions["ResetBall"].performed += BallRepos;
         m_trailVfx = GetComponentInChildren<VisualEffect>(); //Add ball trail change gradient
         m_ballRenderer = GetComponent<MeshRenderer>();
         transform.position = center;
@@ -36,17 +43,14 @@ public class BallBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
-    }
-
-    public void FixedUpdate()
-    {
         DetectCollision();
+        Move();
     }
 
     public void Move()
     {
-        transform.position = transform.position + m_direction.normalized * speed * Time.deltaTime;
+        if (!isStop)
+            transform.position = transform.position + m_direction.normalized * speed * Time.deltaTime;
     }
 
     public int GetBallScore() { return m_score; }
@@ -54,31 +58,15 @@ public class BallBehavior : MonoBehaviour
     private void DetectCollision()
     {
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(transform.position, m_direction.normalized, out hit, speed * 2 * Time.deltaTime))
+        if (Physics.Raycast(transform.position, m_direction.normalized, out hit, speed * Time.deltaTime))
         {
             DestroyBall();
             if (!isDestroy)
             {
                 if (hit.collider.tag == "Wall")
                 {
-                    consecustiveHit += 1;
-                    if (!instance_Bound.isValid())
-                    {
-                        instance_Bound = RuntimeManager.CreateInstance(instance_Bound_Attribution);
-                    }
-                        if (consecustiveHit < 3)
-                    {
-                        instance_Bound.setParameterByName("ConsecutiveHit", consecustiveHit);
-                    }
-                    else
-                    {
-                        instance_Bound.setParameterByName("ConsecutiveHit", 3);
-                    }
-                    instance_Bound.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject.transform));
-                    instance_Bound.start();
-                    //instance_Bound.release();
-                    m_direction = Vector3.Reflect(m_direction.normalized, hit.normal);
-                    m_direction.Normalize();
+                    WallHitSound();
+                    WallReflect(hit);
                     AddBallScore(1);
                     ChangeBallColor(5);
                 }
@@ -86,6 +74,37 @@ public class BallBehavior : MonoBehaviour
 
 
         }
+    }
+
+    private void WallHitSound()
+    {
+        consecustiveHit += 1;
+        if (!instance_Bound.isValid())
+        {
+            instance_Bound = RuntimeManager.CreateInstance(instance_Bound_Attribution);
+        }
+        if (consecustiveHit < 3)
+        {
+            instance_Bound.setParameterByName("ConsecutiveHit", consecustiveHit);
+        }
+        else
+        {
+            instance_Bound.setParameterByName("ConsecutiveHit", 3);
+        }
+        instance_Bound.set3DAttributes(RuntimeUtils.To3DAttributes(gameObject.transform));
+        instance_Bound.start();
+        //instance_Bound.release();
+    }
+
+    private void WallReflect(RaycastHit hit)
+    {
+        m_direction = Vector3.Reflect(m_direction.normalized, hit.normal);
+        transform.position = hit.point;
+        m_direction.Normalize();
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawRay(transform.position, m_direction.normalized * speed * Time.deltaTime);
     }
 
 
@@ -109,15 +128,16 @@ public class BallBehavior : MonoBehaviour
         m_direction = new Vector3(xDir, 0, 0);
     }
 
-    public void Strike(Vector3 direction, PlayerID strikerID)
+    public void Strike(Vector3 direction, PlayerID strikerID, float ratio)
     {
-        if(lastPlayerID != (int)strikerID)
+        if (lastPlayerID != (int)strikerID)
         {
             lastPlayerID = (int)strikerID;
             consecustiveHit = 0;
         }
         m_direction = direction.normalized;
         currentPlayerID = strikerID;
+        speed *= Mathf.Lerp(0.9f, 1.2f, ratio);
         ChangeBallColor((int)strikerID);
     }
 
@@ -132,5 +152,10 @@ public class BallBehavior : MonoBehaviour
         m_trailVfx.SetGradient("Balltrail_Gradient", gameManager.m_playerAsset.playerHitColorsGradient[id]); //Add ball trail change gradient
     }
 
+    private void BallRepos(InputAction.CallbackContext ctx)
+    {
+        transform.position = new Vector3(0, 0, -2.28f);
+        speed = 10;
+    }
 
 }

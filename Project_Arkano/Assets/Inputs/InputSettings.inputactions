@@ -44,6 +44,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "ResetBall",
+                    "type": "Button",
+                    "id": "eb669431-1b38-4ef7-8633-6a7e5eb522d8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -275,6 +283,28 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "ShootDown",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4880aaa3-f49f-497e-b2b7-70b609608708",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ResetBall",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "31df36dd-bc70-40dd-8263-0ec8b752aec7",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "ResetBall",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
