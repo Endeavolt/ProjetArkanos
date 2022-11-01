@@ -25,6 +25,10 @@ public class BallBehavior : MonoBehaviour
     [EventRef]
     public string instance_Bound_Attribution;
     private VisualEffect m_haloVfx;
+    private VisualEffect m_haloVfx2;
+    public float distance_Generatehalo;
+    private Animator m_BallAnimator;
+    private GameObject m_ballObject;
     // Start is called before the first frame update
 
 
@@ -34,14 +38,17 @@ public class BallBehavior : MonoBehaviour
         m_ballRenderer = GetComponent<MeshRenderer>();
         transform.position = center;
         InitDirection();
+        m_ballObject = GameObject.Find("BallObject").gameObject;
     }
 
     void InitVfx()
     {
         VisualEffect[] vfxTab = GetComponentsInChildren<VisualEffect>();
         m_trailVfx = vfxTab[0]; //Add ball trail change gradient
-        m_haloVfx = vfxTab[1];
-        Debug.Log(m_trailVfx.name + " = trail. " + m_haloVfx.name + " = halo.");
+        //m_haloVfx = vfxTab[1];
+        //m_haloVfx2 = vfxTab[2];
+        //Debug.Log(m_trailVfx.name + " = trail. " + m_haloVfx.name + " = halo.");
+        m_BallAnimator = gameObject.GetComponent<Animator>();
     }
     // Update is called once per frame
     void Update()
@@ -56,7 +63,14 @@ public class BallBehavior : MonoBehaviour
 
     public void Move()
     {
+        Vector3 lastPosition = transform.position;
         transform.position = transform.position + m_direction.normalized * speed * Time.deltaTime;
+        float velocity = Vector3.Distance(lastPosition, transform.position);
+        if(velocity > distance_Generatehalo / 10)
+        {
+            LaunchHalo();
+            Debug.Log("Haloed");
+        }
     }
 
     public int GetBallScore() { return m_score; }
@@ -119,13 +133,15 @@ public class BallBehavior : MonoBehaviour
         m_direction = new Vector3(xDir, 0, 0);
     }
 
-    public void Strike(Vector3 direction, PlayerID strikerID)
+    public void Strike(Vector3 direction, PlayerID strikerID, Vector3 trueDirection)
     {
         if(lastPlayerID != (int)strikerID)
         {
             lastPlayerID = (int)strikerID;
             consecustiveHit = 0;
         }
+        Vector3 newRotation = trueDirection;
+        m_ballObject.transform.rotation = Quaternion.Euler(newRotation);
         m_direction = direction.normalized;
         currentPlayerID = strikerID;
         ChangeBallColor((int)strikerID);
@@ -147,8 +163,24 @@ public class BallBehavior : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         speed *= 1.1f;
-        m_haloVfx.SendEvent("Launch");
-        Debug.Log("Launch vfx Halo");
+        //m_haloVfx.SendEvent("Launch");
+        //Debug.Log("Launch vfx Halo");
+    }
+
+    public IEnumerator DeformBall()
+    {
+        yield return new WaitForSeconds(0.5f);
+        m_BallAnimator.SetBool("ActiveDeform", false);
+    }
+    public void LaunchHalo()
+    {        
+        //m_haloVfx2.SendEvent("Launch");
+    }
+
+    public void DeformEffect()
+    {
+        m_BallAnimator.SetBool("ActiveDeform", true);
+        StartCoroutine(DeformBall());
     }
 
 }

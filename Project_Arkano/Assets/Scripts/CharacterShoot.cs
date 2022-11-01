@@ -36,6 +36,7 @@ namespace Player
         [EventRef]
         public string instance_Hit_Attribution;
         public GameObject vfxAnimate;
+        private Animator m_BallAnimator;
         private void Start()
         {
             m_playerInput = GetComponent<PlayerInput>();
@@ -124,10 +125,12 @@ namespace Player
                 Physics.Raycast(center, direction.normalized, out hit, 100.0f, layerMaskObjstacle);
                 direction = hit.point - ballBehavior.transform.position;
                 direction = new Vector3(direction.x, direction.y, 0);
+                Vector3 trueDirection = direction;
                 direction.Normalize();
-                ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex);
+                ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex, trueDirection);
                 GameObject vfx_obj = Instantiate(vfxAnimate, new Vector3(ballBehavior.transform.position.x, ballBehavior.transform.position.y, -5) , ballBehavior.transform.rotation);
                 StartCoroutine(ballBehavior.StartSfx(0.4f));
+                ballBehavior.DeformEffect();
             }
             m_charginTimer = 0;
             m_isCharging = false;
