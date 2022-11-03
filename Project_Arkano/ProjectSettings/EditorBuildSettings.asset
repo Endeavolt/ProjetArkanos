@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Game_Scene/PlayerSelection.unity
     guid: 20435283a26780c4b95f15274f784d43
   - enabled: 1
-    path: Assets/Scenes/Game_Scene/Test.unity
+    path: Assets/Scenes/Game_Scene/GameScene.unity
     guid: 3ae7d313c5143504891dc5d096f4fde1
   m_configObjects: {}

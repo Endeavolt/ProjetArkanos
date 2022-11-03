@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class GeneralUI : MonoBehaviour
 {
     public Image[] playerIcon;
-    public PlayerUI[] playerUIs = new PlayerUI[4];
+    public PlayerUI[] playerUI = new PlayerUI[4];
     public Text scoreText;
     
     public PlayerUI GetPlayerUI(int id)
     {
         //playerUIs[id].SetIcon(playerIcon[id]);
-        playerUIs[id].gameObject.SetActive(true);
-        return playerUIs[id];
+        playerUI[id].gameObject.SetActive(true);
+        return playerUI[id];
     }
 
 
