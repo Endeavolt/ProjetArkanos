@@ -163,12 +163,12 @@ namespace Player
         private void AvatarJump()
         {
             RaycastHit hit = new RaycastHit();
-            if (!IsGrounded(transform.up, ref hit, jumpSpeed * 2 * Time.deltaTime))
+            if (!IsGrounded(transform.up, ref hit, jumpSpeed * 2 * Time.fixedDeltaTime))
             {
                 if (m_jumpDirection == Vector3.zero) m_isJumping = false;
                 transform.position = transform.position + m_jumpDirection * jumpSpeed * Time.deltaTime;
-                m_debugJumpDistance += jumpSpeed * Time.deltaTime;
-                m_debugJumpTime += Time.deltaTime;
+                m_debugJumpDistance += jumpSpeed * Time.fixedDeltaTime;
+                m_debugJumpTime += Time.fixedDeltaTime;
                 Debug.Log(m_jumpDirection);
             }
             else
