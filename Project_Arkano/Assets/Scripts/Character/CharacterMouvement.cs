@@ -223,7 +223,7 @@ namespace Player
         {
             yield return new WaitForSeconds(hitScanWaitTime);
             m_ballBehavior.isStop = false;
-            m_characterShoot.LaunchStrike();
+            m_characterShoot.LaunchStrike(CharacterShoot.StrikeType.HitScanStrike);
             m_isJumping = true;
         }
 

@@ -10,6 +10,11 @@ namespace Player
 
     public class CharacterShoot : MonoBehaviour
     {
+        public enum StrikeType
+        {
+            Normal,
+            HitScanStrike,
+        }
 
         public Vector3 center;
         public float chargeTime = 1.5f;
@@ -71,7 +76,7 @@ namespace Player
         public bool IsShooting() { return m_isCharging; }
         private void Update()
         {
-            if (m_isCharging)
+            if (m_isCharging && !m_characterMouvement.m_isJumping)
             {
                 playerUI.FillStrikeImage(m_charginTimer / chargeTime);
                 m_charginTimer += Time.deltaTime;
@@ -79,6 +84,7 @@ namespace Player
             }
             else
             {
+                ResetStrike();
                 playerUI.aimShootFeedback.transform.position = GetShootUIPos(transform.position);
             }
 
@@ -105,12 +111,19 @@ namespace Player
             m_isCharging = true;
         }
 
-        public void LaunchStrike()
+        public void ResetStrike()
+        {
+            m_charginTimer = 0;
+            playerUI.FillStrikeImage(m_charginTimer / chargeTime);
+        }
+        public void LaunchStrike(StrikeType isHitScanStrike = StrikeType.Normal)
         {
             BallBehavior ballBehavior = null;
 
             if (CheckBallCollison(ref ballBehavior))
             {
+                if (isHitScanStrike == StrikeType.Normal && m_characterMouvement.m_isJumping) return;
+
                 float angle = GetShootAngle();
                 Vector3 direction = GetShootDirection(angle, ballBehavior.transform.position); ;
                 ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex, m_charginTimer / chargeTime);
@@ -118,7 +131,7 @@ namespace Player
             }
             m_charginTimer = 0;
             m_isCharging = false;
-            playerUI.FillStrikeImage(m_charginTimer / chargeTime);
+
         }
 
 
