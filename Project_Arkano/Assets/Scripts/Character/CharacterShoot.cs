@@ -74,8 +74,15 @@ namespace Player
             {
                 playerUI.FillStrikeImage(m_charginTimer / chargeTime);
                 m_charginTimer += Time.deltaTime;
+                playerUI.aimShootFeedback.transform.position = GetShootUIPos(transform.position);
             }
+            else
+            {
+                playerUI.aimShootFeedback.transform.position = GetShootUIPos(transform.position);
+            }
+
         }
+
 
 
         private void OnDrawGizmos()
@@ -99,74 +106,81 @@ namespace Player
 
         public void LaunchStrike()
         {
-            float angle = Mathf.Lerp(0, 90.0f, (float)m_charginTimer / chargeTime);
-            angle = m_isStrikeUp ? angle * -1 : angle;
             BallBehavior ballBehavior = null;
+
             if (CheckBallCollison(ref ballBehavior))
             {
-                if (!m_characterMouvement.IsRightSide())
-                {
-                    angle *= -1.0f;
-                    angle += 180;
-                }
-                if(!instance_Hit.isValid())
-                {
-                    instance_Hit = RuntimeManager.CreateInstance(instance_Hit_Attribution);
-                }
-                instance_Hit.setParameterByName("ChargeRate", m_charginTimer / chargeTime);
-                instance_Hit.start();
-                instance_Hit.release();
-                //instance_Hit.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                //instance_Hit.release();
-                Vector3 direction = Quaternion.AngleAxis(angle, -Vector3.forward) * Vector3.right;
-                RaycastHit hit = new RaycastHit();
-                Physics.Raycast(center, direction.normalized, out hit, 100.0f, layerMaskObjstacle);
-                direction = hit.point - ballBehavior.transform.position;
-                direction = new Vector3(direction.x, direction.y, 0);
-                direction.Normalize();
-                ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex, m_charginTimer/chargeTime);
+                float angle = GetShootAngle();
+                Vector3 direction = GetShootDirection(angle, ballBehavior.transform.position); ;
+                ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex, m_charginTimer / chargeTime);
+                ShootSound();
             }
             m_charginTimer = 0;
             m_isCharging = false;
             playerUI.FillStrikeImage(m_charginTimer / chargeTime);
         }
 
-        public float GetStrikeAngle()
+
+        #region Shoot function
+        private float GetShootAngle()
         {
-            return Mathf.Lerp(0, 90.0f, (float)m_charginTimer / chargeTime);
-        }
-        public void LaunchStrike(float angle)
-        {
+            float angle = Mathf.Lerp(0, 90.0f, (float)m_charginTimer / chargeTime);
             angle = m_isStrikeUp ? angle * -1 : angle;
-            BallBehavior ballBehavior = null;
-            if (CheckBallCollison(ref ballBehavior))
+            if (!m_characterMouvement.IsRightSide())
             {
-                if (!m_characterMouvement.IsRightSide())
-                {
-                    angle *= -1.0f;
-                    angle += 180;
-                }
-                if (!instance_Hit.isValid())
-                {
-                    instance_Hit = RuntimeManager.CreateInstance(instance_Hit_Attribution);
-                }
-                instance_Hit.setParameterByName("ChargeRate", m_charginTimer / chargeTime);
-                instance_Hit.start();
-                instance_Hit.release();
-                //instance_Hit.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                //instance_Hit.release();
-                Vector3 direction = Quaternion.AngleAxis(angle, -Vector3.forward) * Vector3.right;
-                RaycastHit hit = new RaycastHit();
-                Physics.Raycast(center, direction.normalized, out hit, 100.0f, layerMaskObjstacle);
-                direction = hit.point - ballBehavior.transform.position;
-                direction = new Vector3(direction.x, direction.y, 0);
-                direction.Normalize();
-                ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex, m_charginTimer / chargeTime);
+                angle *= -1.0f;
+                angle += 180;
             }
-            m_charginTimer = 0;
-            m_isCharging = false;
-            playerUI.FillStrikeImage(m_charginTimer / chargeTime);
+            return angle;
         }
+
+        private Vector3 GetShootDestination(float angle)
+        {
+            Vector3 direction = Quaternion.AngleAxis(angle, -Vector3.forward) * Vector3.right;
+            RaycastHit hit = new RaycastHit();
+            Physics.Raycast(center, direction.normalized, out hit, 100.0f, layerMaskObjstacle);
+            return hit.point;
+        }
+        private Vector3 GetShootDirection(float angle, Vector3 position)
+        {
+            Vector3 destination = GetShootDestination(angle);
+            Vector3 direction = destination - position;
+            direction = new Vector3(direction.x, direction.y, 0);
+            return direction.normalized;
+
+        }
+
+        private Vector3 GetShootUIPos(Vector3 position)
+        {
+            float angle = GetShootAngle();
+            Vector3 dest = GetShootDestination(angle);
+            dest.z = 0;
+            Vector3 direction = position - dest;
+            Debug.DrawRay(transform.position, -direction);
+            direction.z = 0;
+            float angleDir = Vector3.SignedAngle(direction, Vector3.right, Vector3.right);
+            Vector3 positionUI = dest + direction.normalized * (Mathf.Abs(center.x - dest.x) / Mathf.Abs(Mathf.Cos(angleDir * Mathf.Deg2Rad)));
+            positionUI.z = -5.0f;
+            return positionUI;
+
+        }
+
+        #endregion
+
+        #region Sound Functions
+        private void ShootSound()
+        {
+            if (!instance_Hit.isValid())
+            {
+                instance_Hit = RuntimeManager.CreateInstance(instance_Hit_Attribution);
+            }
+            instance_Hit.setParameterByName("ChargeRate", m_charginTimer / chargeTime);
+            instance_Hit.start();
+            instance_Hit.release();
+            //instance_Hit.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            //instance_Hit.release();
+        }
+        #endregion
 
         public bool CheckBallCollison(ref BallBehavior ballBehavior)
         {
@@ -183,7 +197,7 @@ namespace Player
         }
         public void StartInstance_Charging()
         {
-            if(!instance_Charging.isValid())
+            if (!instance_Charging.isValid())
             {
                 instance_Charging = RuntimeManager.CreateInstance(instance_Charging_Attribution);
                 instance_Charging.start();
@@ -200,6 +214,6 @@ namespace Player
         }
 
     }
-    
+
 
 }

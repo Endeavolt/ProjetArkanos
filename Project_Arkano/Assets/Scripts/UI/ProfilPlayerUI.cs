@@ -18,6 +18,7 @@ public class ProfilPlayerUI : MonoBehaviour
     public Image playerImage;
     public ProfilState profilState = ProfilState.None;
     public InputDevice playerDevice;
+    public GameObject aimShootFeedback;
 
 
     public void ChangePlayerName(string name)

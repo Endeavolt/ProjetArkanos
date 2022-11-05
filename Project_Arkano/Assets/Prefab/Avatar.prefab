@@ -391,6 +391,7 @@ MonoBehaviour:
   layerMaskObjstacle:
     serializedVersion: 2
     m_Bits: 8
+  aimShootFeedback: {fileID: 0}
   activeDebug: 1
   instance_Charging_Attribution: event:/Player/Charge
   instance_Hit_Attribution: event:/Player/Hit

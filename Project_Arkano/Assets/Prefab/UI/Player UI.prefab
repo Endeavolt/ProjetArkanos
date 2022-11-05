@@ -144,6 +144,7 @@ MonoBehaviour:
   instructionText: {fileID: 9106005438745712536}
   playerImage: {fileID: 4915067117306080609}
   profilState: 0
+  aimShootFeedback: {fileID: 0}
 --- !u!114 &3846268469945117648
 MonoBehaviour:
   m_ObjectHideFlags: 0

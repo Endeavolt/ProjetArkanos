@@ -9,6 +9,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Image m_iconPlayer;
     [SerializeField] private Image m_loadStrike;
     [SerializeField] private Image m_stateSuperStrike;
+    public GameObject aimShootFeedback;
 
 
     public  void  SetIcon(Image image) { m_iconPlayer = image; }

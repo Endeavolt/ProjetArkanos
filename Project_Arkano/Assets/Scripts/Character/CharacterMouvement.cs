@@ -221,10 +221,9 @@ namespace Player
 
         private IEnumerator HitScanStrinking()
         {
-            float angle = m_characterShoot.GetStrikeAngle();
             yield return new WaitForSeconds(hitScanWaitTime);
             m_ballBehavior.isStop = false;
-            m_characterShoot.LaunchStrike(angle);
+            m_characterShoot.LaunchStrike();
             m_isJumping = true;
         }
 
