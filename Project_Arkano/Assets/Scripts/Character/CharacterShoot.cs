@@ -68,6 +68,7 @@ namespace Player
             }
         }
 
+        public bool IsShooting() { return m_isCharging; }
         private void Update()
         {
             if (m_isCharging)

@@ -203,7 +203,7 @@ namespace Player
         private void SetupHitScanStrike()
         {
             RaycastHit hitInfo = new RaycastHit();
-            if (IsHitScanStrike(ref hitInfo) && hitInfo.collider.tag =="Ball")
+            if (IsHitScanStrike(ref hitInfo) && hitInfo.collider.tag =="Ball" && m_characterShoot.IsShooting())
             {
                 Vector3 dirRepostion = transform.position.x > hitInfo.transform.position.x ? -Vector3.right : Vector3.right;
                 Vector3 playerPos = hitInfo.transform.position + dirRepostion * hitInfo.transform.localScale.x;
