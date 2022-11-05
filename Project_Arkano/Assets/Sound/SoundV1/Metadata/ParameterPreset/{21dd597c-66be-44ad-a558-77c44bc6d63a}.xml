@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="ParameterPreset" id="{21dd597c-66be-44ad-a558-77c44bc6d63a}">
+		<property name="name">
+			<value>ChargeRate</value>
+		</property>
+		<relationship name="folder">
+			<destination>{c0c03817-7ccf-4b5d-83e4-bcd6483325a6}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{2e4e82ad-2c24-4688-aef5-f1624fb6de45}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{2e4e82ad-2c24-4688-aef5-f1624fb6de45}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

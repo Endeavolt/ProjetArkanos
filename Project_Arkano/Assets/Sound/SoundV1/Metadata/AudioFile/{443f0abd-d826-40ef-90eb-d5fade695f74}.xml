@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.01.00">
+	<object class="AudioFile" id="{443f0abd-d826-40ef-90eb-d5fade695f74}">
+		<property name="assetPath">
+			<value>HitBall_Charge0.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>1</value>
+		</property>
+		<property name="length">
+			<value>3.0658730158730161</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{aa33acde-8c85-4497-9c6b-9fad14fecd3d}</destination>
+		</relationship>
+	</object>
+</objects>
