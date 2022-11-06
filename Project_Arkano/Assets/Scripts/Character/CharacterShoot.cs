@@ -20,6 +20,7 @@ namespace Player
         public float chargeTime = 1.5f;
         public float boxSize = 5.0f;
         public LayerMask layerMaskObjstacle;
+   
 
         [Header("Debug")]
         public bool activeDebug = false;
@@ -33,6 +34,7 @@ namespace Player
 
         private CharacterMouvement m_characterMouvement;
         private PlayerInput m_playerInput;
+        private CameraShake m_cameraShake;
 
         public EventInstance instance_Charging;
         [EventRef]
@@ -44,6 +46,7 @@ namespace Player
         {
             m_playerInput = GetComponent<PlayerInput>();
             m_characterMouvement = GetComponent<CharacterMouvement>();
+            m_cameraShake = Camera.main.GetComponent<CameraShake>();
         }
 
         public void StrikeUpInput(InputAction.CallbackContext ctx)
@@ -123,7 +126,6 @@ namespace Player
             if (CheckBallCollison(ref ballBehavior))
             {
                 if (isHitScanStrike == StrikeType.Normal && m_characterMouvement.m_isJumping) return;
-
                 float angle = GetShootAngle();
                 Vector3 direction = GetShootDirection(angle, ballBehavior.transform.position); ;
                 ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex, m_charginTimer / chargeTime);

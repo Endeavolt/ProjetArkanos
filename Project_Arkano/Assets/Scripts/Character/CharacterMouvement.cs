@@ -14,6 +14,7 @@ namespace Player
         public bool ActiveAnalogigDirection;
         public float speed = 5;
         public float jumpSpeed = 25;
+        public float shakeTime = .5f;
         [Header("Debug")]
         public bool activeDebug = false;
 
@@ -31,7 +32,8 @@ namespace Player
         private float m_debugJumpTime;
         private float m_debugJumpDistance;
         private Vector3 m_debugJumpDir;
-
+        
+        private CameraShake m_cameraShake;
         private CapsuleCollider m_capsuleCollider;
         private CharacterShoot m_characterShoot;
         private MeshFilter m_meshFilter;
@@ -44,6 +46,7 @@ namespace Player
             m_characterShoot = GetComponent<CharacterShoot>();
             m_capsuleCollider = GetComponent<CapsuleCollider>();
             m_meshFilter = GetComponent<MeshFilter>();
+            m_cameraShake= Camera.main.GetComponent<CameraShake>();
         }
 
         #region InputPlayer
@@ -222,6 +225,7 @@ namespace Player
         private IEnumerator HitScanStrinking()
         {
             yield return new WaitForSeconds(hitScanWaitTime);
+            StartCoroutine(m_cameraShake.LaunchShakeEffect(hitScanWaitTime,1.0f));
             m_ballBehavior.isStop = false;
             m_characterShoot.LaunchStrike(CharacterShoot.StrikeType.HitScanStrike);
             m_isJumping = true;
