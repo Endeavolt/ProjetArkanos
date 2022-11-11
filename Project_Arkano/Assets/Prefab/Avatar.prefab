@@ -366,13 +366,14 @@ MonoBehaviour:
   activeDebug: 0
   layer:
     serializedVersion: 2
-    m_Bits: 1855
+    m_Bits: 831
   hitScanLayerMask:
     serializedVersion: 2
-    m_Bits: 1855
+    m_Bits: 2879
   m_directionInput: {x: 0, y: 0, z: 0}
   m_directionJump: {x: 0, y: 0, z: 0}
   m_isJumping: 1
+  hitScanStrikeManager: {fileID: 0}
   hitScanWaitTime: 0.5
 --- !u!114 &119933406763524977
 MonoBehaviour:

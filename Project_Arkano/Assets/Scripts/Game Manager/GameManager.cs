@@ -63,6 +63,7 @@ public class GameManager : MonoBehaviour
     {
         GameObject ballGo = GameObject.Instantiate(ball, new Vector3(0, 0, -2.28f), Quaternion.identity);
         BallBehavior behavior = ballGo.GetComponent<BallBehavior>();
+        GetComponent<General.HitScanStrikeManager>().ball  = behavior;
         behavior.gameManager = this;
     }
 
@@ -124,6 +125,7 @@ public class GameManager : MonoBehaviour
         pInput.transform.position = spawnPosition[index];
         pInput.GetComponent<MeshRenderer>().material.color = playerColor[index];
         pInput.GetComponent<Player.CharacterShoot>().playerUI = generalUI.GetPlayerUI(index);
+        pInput.GetComponent<Player.CharacterMouvement>().hitScanStrikeManager = GetComponent<General.HitScanStrikeManager>();
 
     }
     public int GetPlayerNumber()

@@ -38,8 +38,11 @@ namespace Player
         private CharacterShoot m_characterShoot;
         private MeshFilter m_meshFilter;
         private BallBehavior m_ballBehavior;
+        private bool m_HasExtraJump;
+        [HideInInspector]
+        public General.HitScanStrikeManager hitScanStrikeManager;
         public float hitScanWaitTime = 0.3f;
-
+       
 
         public void Start()
         {
@@ -61,6 +64,7 @@ namespace Player
         public void JumpInput(InputAction.CallbackContext ctx)
         {
             if (ctx.started && !m_isJumping) Jump();
+            if (ctx.started && m_isJumping && m_HasExtraJump) Jump();
         }
 
 
@@ -153,6 +157,10 @@ namespace Player
         #endregion
 
         #region Jump
+        public void SetExtraJump()
+        {
+            m_HasExtraJump = true;
+        }
 
         private void FixedUpdate()
         {
@@ -196,11 +204,12 @@ namespace Player
                 m_jumpDirection = EightDirectionTransformation(m_jumpDirection);
             }
             m_jumpDirection = m_jumpDirection.normalized;
+            m_jumpDirection.z = 0.0f;
             float angle = Vector3.SignedAngle(m_jumpDirection.normalized, transform.up, -transform.forward);
 
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + angle);
             SetupHitScanStrike();
-
+            m_HasExtraJump = false;
         }
 
         private void SetupHitScanStrike()
@@ -208,27 +217,12 @@ namespace Player
             RaycastHit hitInfo = new RaycastHit();
             if (IsHitScanStrike(ref hitInfo) && hitInfo.collider.tag =="Ball" && m_characterShoot.IsShooting())
             {
-                Vector3 dirRepostion = transform.position.x > hitInfo.transform.position.x ? -Vector3.right : Vector3.right;
-                Vector3 playerPos = hitInfo.transform.position + dirRepostion * hitInfo.transform.localScale.x;
-                transform.position = playerPos;
-                m_ballBehavior = hitInfo.collider.GetComponent<BallBehavior>();
-                m_ballBehavior.isStop = true;
-                
-                StartCoroutine(HitScanStrinking());
+                hitScanStrikeManager.AddPlayer(m_characterShoot.GetShootDirection(), this.gameObject);
             }
             else
             {
                 m_isJumping = true;
             }
-        }
-
-        private IEnumerator HitScanStrinking()
-        {
-            yield return new WaitForSeconds(hitScanWaitTime);
-            StartCoroutine(m_cameraShake.LaunchShakeEffect(hitScanWaitTime,1.0f));
-            m_ballBehavior.isStop = false;
-            m_characterShoot.LaunchStrike(CharacterShoot.StrikeType.HitScanStrike);
-            m_isJumping = true;
         }
 
         private bool IsHitScanStrike(ref RaycastHit hitInfo)
@@ -239,6 +233,11 @@ namespace Player
         private Vector3 IsJumpDirectionValid()
         {
             return m_directionJump == Vector3.zero ? transform.up : m_directionJump;
+        }
+
+        public  void FinishHitScan()
+        {
+            m_isJumping = true;
         }
 
         private void JumpDebug()

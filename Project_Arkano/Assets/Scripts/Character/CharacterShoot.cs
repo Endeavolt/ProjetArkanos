@@ -136,6 +136,10 @@ namespace Player
 
         }
 
+        public int GetPlayerID()
+        {
+            return m_playerInput.playerIndex;
+        }
 
         #region Shoot function
         private float GetShootAngle()
@@ -181,6 +185,12 @@ namespace Player
 
         }
 
+        public Vector3 GetShootDirection()
+        {
+            float angle = GetShootAngle();
+            Vector3 dest = GetShootDestination(angle);
+            return dest;
+        }
         #endregion
 
         #region Sound Functions

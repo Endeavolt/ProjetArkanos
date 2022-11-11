@@ -137,7 +137,7 @@ public class BallBehavior : MonoBehaviour
         }
         m_direction = direction.normalized;
         currentPlayerID = strikerID;
-        speed *= Mathf.Lerp(0.9f, 1.2f, ratio);
+        speed *= Mathf.Lerp(1.0f, 1.2f, ratio);
         ChangeBallColor((int)strikerID);
     }
 

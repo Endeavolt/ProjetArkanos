@@ -454,6 +454,28 @@ MonoBehaviour:
   IsPlayerNumberSecurity: 1
   m_playerAsset: {fileID: 585740805}
   autoLaunch: 1
+--- !u!114 &585740803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585740801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed68841fd8436c846b7aba1d72ab4f3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionBaseTime: 0.25
+  playerPosition: []
+  ball: {fileID: 0}
+  debugActive: 0
+  positionColor:
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
+  radiusPositionSphere: 0.3
 --- !u!114 &585740805
 MonoBehaviour:
   m_ObjectHideFlags: 0
