@@ -30,8 +30,6 @@ public class BallBehavior : MonoBehaviour
 
     public PlayerInput playerInput;
     public LayerMask layerMask;
-    public List<Vector3> pos = new List<Vector3>() /* misc*/;
-    private int count;
     private Vector3 normal;
     private Vector3 prevDir;
     private Vector3 lastPoint;
@@ -44,6 +42,7 @@ public class BallBehavior : MonoBehaviour
         m_ballRenderer = GetComponent<MeshRenderer>();
         transform.position = center;
         InitDirection();
+        ChangeBallColor(5);
     }
 
     // Update is called once per frame
@@ -105,24 +104,11 @@ public class BallBehavior : MonoBehaviour
 
     private void WallReflect(RaycastHit hit)
     {
-        Debug.LogError("Normal hit" + hit.normal.ToString("F10"));
         normal = hit.normal;
         prevDir = m_direction;
-        Debug.LogError(" Direction = " + m_direction.ToString("F10"));
         m_direction = Vector3.Reflect(m_direction.normalized, hit.normal);
-        if (pos.Count <= 100)
-        {
-            pos.Add(hit.point);
-        }
-        else
-        {
-            int index = count % 100;
-            pos.Insert(index, hit.point);
-            count++;
-        }
         lastPoint = hit.point;
-        //transform.position = hit.point;
-        CheckOverlapWall(prevDir);
+       // CheckOverlapWall(prevDir);
         DetectCollision();
         m_direction.Normalize();
     }
@@ -185,6 +171,7 @@ public class BallBehavior : MonoBehaviour
         if (id == 5)
         {
             m_ballRenderer.material.color = Color.white;
+            m_trailVfx.SetGradient("Balltrail_Gradient", gameManager.m_playerAsset.playerHitColorsGradient[4]);
             return;
         }
         //m_ballRenderer.material.color = gameManager.playerColor[id]; //Add ball trail change gradient
@@ -200,11 +187,6 @@ public class BallBehavior : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.magenta;
-        for (int i = 0; i < pos.Count; i++)
-        {
-            Gizmos.DrawSphere(pos[i], .1f);
-        }
         Gizmos.color = Color.red;
         Gizmos.DrawRay(lastPoint, normal * 5);
         Gizmos.color = Color.blue;
