@@ -15,7 +15,7 @@ namespace General
         public float maxSpeedForcePercent  =  .25f;
         [HideInInspector]
         public BallBehavior ball;
-        public float radiusOfStrike;
+        [Tooltip("Distance minimum with walls for active the hit scan strike")] public float radiusOfStrike;
         public LayerMask layerMask;
         [Header("Debug Parameters")]
         public Vector3 center = new Vector3(1.05f, 1.28f, -2.23f);
