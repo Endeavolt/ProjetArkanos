@@ -121,6 +121,7 @@ namespace Player
         }
         public void LaunchStrike(StrikeType isHitScanStrike = StrikeType.Normal)
         {
+            if (m_characterMouvement.m_isJumping) return;
             BallBehavior ballBehavior = null;
 
             if (CheckBallCollison(ref ballBehavior))

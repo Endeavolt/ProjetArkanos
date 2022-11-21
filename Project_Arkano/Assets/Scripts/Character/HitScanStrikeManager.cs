@@ -45,6 +45,10 @@ namespace General
         public void AddPlayer(Vector3 direction, GameObject player)
         {
             if (m_isPhase3) return;
+            if (m_currentPlayerInvolve == 0)
+            {
+                CheckBallPosIsAllow();
+            }
             direction = direction.normalized;
             SetDirectionOrder(direction);
             player.transform.position = ball.transform.position  + playerPosition[m_currentPlayerInvolve];
@@ -56,7 +60,6 @@ namespace General
             if (m_currentPlayerInvolve >= 2) m_bIsDuel = true;
             if (m_currentPlayerInvolve == 1)
             {
-                CheckBallPosIsAllow();
                 StartCoroutine(HitScanInteraction());
             }
         }
@@ -126,7 +129,9 @@ namespace General
         private void CheckBallPosIsAllow()
         {
             ReplaceBall(Mathf.Sign(ball.m_direction.x) * ball.transform.right);
+            ReplaceBall(-Mathf.Sign(ball.m_direction.x) * ball.transform.right);
             ReplaceBall(Mathf.Sign(ball.m_direction.y) * ball.transform.up);
+            ReplaceBall(-Mathf.Sign(ball.m_direction.y) * ball.transform.up);
         }
 
         private void ReplaceBall(Vector3 direction)
@@ -134,7 +139,7 @@ namespace General
             RaycastHit hit = new RaycastHit();
             if (Physics.Raycast(ball.transform.position, direction, out hit, radiusOfStrike, layerMask))
             {
-                ball.transform.position += (ball.transform.position + direction * radiusOfStrike - hit.point);
+                ball.transform.position -= (ball.transform.position + direction * radiusOfStrike - hit.point);
             }
         }
 
