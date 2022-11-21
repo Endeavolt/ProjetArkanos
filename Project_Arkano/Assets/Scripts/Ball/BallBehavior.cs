@@ -18,7 +18,7 @@ public class BallBehavior : MonoBehaviour
 
     [SerializeField]
     private int m_score;
-    private Vector3 m_direction;
+    public Vector3 m_direction; /* misc*/
     private MeshRenderer m_ballRenderer;
     public int lastPlayerID;
     public int consecustiveHit;
@@ -29,11 +29,17 @@ public class BallBehavior : MonoBehaviour
     public string instance_Bound_Attribution;
 
     public PlayerInput playerInput;
+    public LayerMask layerMask;
+    public List<Vector3> pos = new List<Vector3>() /* misc*/;
+    private int count;
+    private Vector3 normal;
+    private Vector3 prevDir;
+    private Vector3 lastPoint;
     // Start is called before the first frame update
     void Start()
     {
         playerInput = FindObjectOfType<PlayerInput>();
-        playerInput.actions["ResetBall"].performed += BallRepos;
+        //playerInput.actions["ResetBall"].performed += BallRepos;
         m_trailVfx = GetComponentInChildren<VisualEffect>(); //Add ball trail change gradient
         m_ballRenderer = GetComponent<MeshRenderer>();
         transform.position = center;
@@ -58,7 +64,7 @@ public class BallBehavior : MonoBehaviour
     private void DetectCollision()
     {
         RaycastHit hit = new RaycastHit();
-        if (Physics.Raycast(transform.position, m_direction.normalized, out hit, speed * Time.deltaTime))
+        if (Physics.Raycast(transform.position + m_direction.normalized * transform.localScale.x, m_direction.normalized, out hit, speed  * Time.deltaTime, layerMask))
         {
             DestroyBall();
             if (!isDestroy)
@@ -74,6 +80,7 @@ public class BallBehavior : MonoBehaviour
 
 
         }
+        CheckOverlapWall(m_direction);
     }
 
     private void WallHitSound()
@@ -98,10 +105,42 @@ public class BallBehavior : MonoBehaviour
 
     private void WallReflect(RaycastHit hit)
     {
+        Debug.LogError("Normal hit" + hit.normal.ToString("F10"));
+        normal = hit.normal;
+        prevDir = m_direction;
+        Debug.LogError(" Direction = " + m_direction.ToString("F10"));
         m_direction = Vector3.Reflect(m_direction.normalized, hit.normal);
-        transform.position = hit.point;
+        if (pos.Count <= 100)
+        {
+            pos.Add(hit.point);
+        }
+        else
+        {
+            int index = count % 100;
+            pos.Insert(index, hit.point);
+            count++;
+        }
+        lastPoint = hit.point;
+        //transform.position = hit.point;
+        CheckOverlapWall(prevDir);
+        DetectCollision();
         m_direction.Normalize();
     }
+    private void CheckOverlapWall(Vector3 direction)
+    {
+      
+        RaycastHit hit = new RaycastHit();
+        RaycastHit hit2 = new RaycastHit();
+        Vector3 dir = new Vector3(direction.normalized.x, 0, 0);
+        Vector3 dir2 = new Vector3(0, direction.normalized.y, 0);
+        if (Physics.Raycast(transform.position, dir.normalized, out hit, transform.localScale.x / 2, layerMask) && Physics.Raycast(transform.position, dir2.normalized, out hit2, transform.localScale.x / 2, layerMask))
+        {
+            float diff = transform.localScale.x - (hit.point.x - transform.position.x);
+            float diff2 = transform.localScale.y - (hit2.point.y - transform.position.y);
+            transform.position = new Vector3(transform.position.x + diff, transform.position.y + diff2, transform.position.z);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.DrawRay(transform.position, m_direction.normalized * speed * Time.deltaTime);
@@ -158,4 +197,19 @@ public class BallBehavior : MonoBehaviour
         speed = 10;
     }
 
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.magenta;
+        for (int i = 0; i < pos.Count; i++)
+        {
+            Gizmos.DrawSphere(pos[i], .1f);
+        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(lastPoint, normal * 5);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(lastPoint, -prevDir * 5);
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(lastPoint, m_direction * 5);
+    }
 }

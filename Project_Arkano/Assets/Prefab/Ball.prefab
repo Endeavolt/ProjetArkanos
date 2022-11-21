@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8600274576790002816}
   - component: {fileID: 8600274576790002943}
   - component: {fileID: 8600274576790002942}
-  - component: {fileID: 1540020229}
+  - component: {fileID: 6741637244276498966}
   m_Layer: 11
   m_Name: Ball
   m_TagString: Ball
@@ -117,11 +117,16 @@ MonoBehaviour:
   isDestroy: 0
   isStop: 0
   m_score: 0
+  m_direction: {x: 0, y: 0, z: 0}
   lastPlayerID: 0
   consecustiveHit: 0
   instance_Bound_Attribution: event:/SFX/Balle/Hit_Score
   playerInput: {fileID: 0}
---- !u!54 &1540020229
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 2879
+  pos: []
+--- !u!54 &6741637244276498966
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,7 +139,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 2
   m_Constraints: 0
   m_CollisionDetection: 2
 --- !u!114 &1453688224

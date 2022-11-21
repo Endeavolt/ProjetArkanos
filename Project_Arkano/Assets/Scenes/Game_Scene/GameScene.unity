@@ -213,7 +213,7 @@ Transform:
   m_GameObject: {fileID: 338667955}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
   m_LocalPosition: {x: 1.4913, y: 7.447771, z: -2.4668913}
-  m_LocalScale: {x: 30.15354, y: 1, z: 1}
+  m_LocalScale: {x: 31.223991, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
@@ -466,16 +466,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed68841fd8436c846b7aba1d72ab4f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactionBaseTime: 0.25
-  playerPosition: []
+  interactionBaseTime: 0.5
+  waitingTimeAfterInteraction: 0.4
+  playerPosition:
+  - {x: -1.1, y: -0.62, z: 0}
+  - {x: -1.1, y: 0.34, z: 0}
+  - {x: -0.4, y: 0.94, z: 0}
+  - {x: -0.41, y: -1.14, z: 0}
+  powerSpeedBallCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.0024414062
+      inSlope: 4.814163
+      outSlope: 4.814163
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.043129575
+    - serializedVersion: 3
+      time: 0.6092024
+      value: 0.8953735
+      inSlope: 0.42670763
+      outSlope: 0.42670763
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.106371395
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  maxSpeedForcePercent: 0.25
   ball: {fileID: 0}
+  center: {x: 1.29, y: 1.28, z: -2.23}
   debugActive: 0
   positionColor:
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
-  radiusPositionSphere: 0.3
+  - {r: 0.8396226, g: 0.17030083, b: 0.17030083, a: 1}
+  - {r: 0, g: 0.5373578, b: 1, a: 1}
+  - {r: 0, g: 1, b: 0.14043546, a: 1}
+  - {r: 0.9433962, g: 0.4672481, b: 0.8574006, a: 1}
+  radiusPositionSphere: 0.25
+  m_rawShootDirection: []
 --- !u!114 &585740805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,7 +808,7 @@ Transform:
   m_GameObject: {fileID: 603954523}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.4769, y: -5.3477716, z: -2.4668913}
-  m_LocalScale: {x: 30.12428, y: 1, z: 1}
+  m_LocalScale: {x: 31.13947, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
