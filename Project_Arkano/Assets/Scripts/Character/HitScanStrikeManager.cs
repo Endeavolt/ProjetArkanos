@@ -23,7 +23,7 @@ namespace General
         public Color[] positionColor = new Color[4];
         public float radiusPositionSphere = .3f;
 
-        private List<Player.CharacterMouvement> m_playerScriptList = new List<Player.CharacterMouvement>();
+        private List<Player.CharacterJump> m_playerScriptList = new List<Player.CharacterJump>();
         public List<Vector3> m_rawShootDirection = new List<Vector3>(4);
         private CameraShake m_cameraShake;
         private int m_currentPlayerInvolve;
@@ -52,7 +52,7 @@ namespace General
             direction = direction.normalized;
             SetDirectionOrder(direction);
             player.transform.position = ball.transform.position  + playerPosition[m_currentPlayerInvolve];
-            m_playerScriptList.Add(player.GetComponent<Player.CharacterMouvement>());
+            m_playerScriptList.Add(player.GetComponent<Player.CharacterJump>());
             m_currentPlayerInvolve++;
             m_timeInteraction = interactionBaseTime;
             m_timerInteraction = .0f;

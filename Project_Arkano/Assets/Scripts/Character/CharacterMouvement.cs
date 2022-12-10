@@ -36,7 +36,7 @@ namespace Player
         private CameraShake m_cameraShake;
         private CapsuleCollider m_capsuleCollider;
         private CharacterShoot m_characterShoot;
-        private MeshFilter m_meshFilter;
+        private CharacterJump m_characterJump;
         private BallBehavior m_ballBehavior;
         private bool m_HasExtraJump;
         [HideInInspector]
@@ -48,8 +48,7 @@ namespace Player
         {
             m_characterShoot = GetComponent<CharacterShoot>();
             m_capsuleCollider = GetComponent<CapsuleCollider>();
-            m_meshFilter = GetComponent<MeshFilter>();
-            m_cameraShake= Camera.main.GetComponent<CameraShake>();
+            m_characterJump = GetComponent<CharacterJump>();
         }
 
         #region InputPlayer
@@ -61,21 +60,12 @@ namespace Player
             m_directionInput = m_directionJump;
         }
 
-        public void JumpInput(InputAction.CallbackContext ctx)
-        {
-            if (ctx.started && !m_isJumping) Jump();
-            if (ctx.started && m_isJumping && m_HasExtraJump) Jump();
-        }
-
 
         #endregion
 
         public void Update()
         {
-            m_debugJumpDir = IsJumpDirectionValid();
-
-            Debug.Log(IsJumpDirectionValid());
-            if (!m_isJumping)
+            if (!m_characterJump.isJumping)
             {
                 AvatarMouvement();
                 AvatarOrientation();
@@ -105,7 +95,6 @@ namespace Player
                 float angle = GetNormalAngle(hit.normal);
                 m_direction = ChangeMovementDirection(angle);
                 m_direction.Normalize();
-                m_isJumping = false;
             }
 
         }
@@ -126,8 +115,6 @@ namespace Player
             if (angle >= 180.0f) angle = 0.0f;
             return angle;
         }
-
-
 
         private Vector3 EightDirectionTransformation(Vector3 direction)
         {
@@ -153,98 +140,6 @@ namespace Player
         private void Move()
         {
             transform.position += m_direction.normalized * speed * Time.deltaTime;
-        }
-        #endregion
-
-        #region Jump
-        public void SetExtraJump()
-        {
-            m_HasExtraJump = true;
-        }
-
-        private void FixedUpdate()
-        {
-            if (m_isJumping)
-            {
-                AvatarJump();
-            }
-
-        }
-
-        private void AvatarJump()
-        {
-            RaycastHit hit = new RaycastHit();
-            if (!IsGrounded(transform.up, ref hit, jumpSpeed * 2 * Time.fixedDeltaTime))
-            {
-                if (m_jumpDirection == Vector3.zero) m_isJumping = false;
-                transform.position = transform.position + m_jumpDirection * jumpSpeed * Time.deltaTime;
-                m_debugJumpDistance += jumpSpeed * Time.fixedDeltaTime;
-                m_debugJumpTime += Time.fixedDeltaTime;
-                Debug.Log(m_jumpDirection);
-            }
-            else
-            {
-                if (activeDebug) JumpDebug();
-                m_isJumping = false;
-                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, 0, transform.rotation.eulerAngles.z);
-                float angle = Vector3.SignedAngle(transform.up, hit.normal, Vector3.forward);
-                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + angle);
-                transform.position = transform.position + (hit.point - transform.position).normalized * ((hit.point - transform.position).magnitude - 1);
-                Debug.Log(m_jumpDirection);
-            }
-        }
-
-        private void Jump()
-        {
-            GlobalSoundManager.PlayOneShot(1, transform.position);
-
-            m_jumpDirection = IsJumpDirectionValid();
-            if (!ActiveAnalogigDirection)
-            {
-                m_jumpDirection = EightDirectionTransformation(m_jumpDirection);
-            }
-            m_jumpDirection = m_jumpDirection.normalized;
-            m_jumpDirection.z = 0.0f;
-            float angle = Vector3.SignedAngle(m_jumpDirection.normalized, transform.up, -transform.forward);
-
-            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + angle);
-            SetupHitScanStrike();
-            m_HasExtraJump = false;
-        }
-
-        private void SetupHitScanStrike()
-        {
-            RaycastHit hitInfo = new RaycastHit();
-            if (IsHitScanStrike(ref hitInfo) && hitInfo.collider.tag =="Ball" && m_characterShoot.IsShooting())
-            {
-                hitScanStrikeManager.AddPlayer(m_characterShoot.GetShootDirection(), this.gameObject);
-            }
-            else
-            {
-                m_isJumping = true;
-            }
-        }
-
-        private bool IsHitScanStrike(ref RaycastHit hitInfo)
-        {
-            return Physics.CapsuleCast(transform.position + Vector3.up * -0.5f, transform.position + Vector3.up * 0.5f, m_capsuleCollider.radius, m_jumpDirection,out hitInfo, 30, hitScanLayerMask) ;
-        }
-
-        private Vector3 IsJumpDirectionValid()
-        {
-            return m_directionJump == Vector3.zero ? transform.up : m_directionJump;
-        }
-
-        public  void FinishHitScan()
-        {
-            m_isJumping = true;
-        }
-
-        private void JumpDebug()
-        {
-            Debug.Log("<b>Jump Time :</b> <color=cyan>" + m_debugJumpTime + "</color> <b>Jump Distance :</b><color=cyan>" + m_debugJumpDistance + "</color><b> Jump Direction :</b><color=cyan>" + m_debugJumpDir + "</color>");
-            m_debugJumpDistance = 0.0f;
-            m_debugJumpTime = 0.0f;
         }
         #endregion
 
@@ -292,7 +187,7 @@ namespace Player
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(transform.position + Vector3.up * 0.5f, 0.1f);
             Gizmos.DrawSphere(transform.position + -Vector3.up * 0.5f, 0.1f);
-            Gizmos.DrawMesh(m_meshFilter.mesh, transform.position + new Vector3(m_debugJumpDir.x, m_debugJumpDir.y, 0).normalized * 10.0f) ;
+            //Gizmos.DrawMesh(m_meshFilter.mesh, transform.position + new Vector3(m_debugJumpDir.x, m_debugJumpDir.y, 0).normalized * 10.0f) ;
 
         }
     }
