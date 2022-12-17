@@ -33,6 +33,7 @@ namespace Player
         private float m_charginTimer = 0.0f;
 
         private CharacterMouvement m_characterMouvement;
+        private CharacterJump m_characterJump;
         private PlayerInput m_playerInput;
         private CameraShake m_cameraShake;
 
@@ -45,6 +46,7 @@ namespace Player
         private void Start()
         {
             m_playerInput = GetComponent<PlayerInput>();
+            m_characterJump = GetComponent<CharacterJump>();
             m_characterMouvement = GetComponent<CharacterMouvement>();
             m_cameraShake = Camera.main.GetComponent<CameraShake>();
         }
@@ -79,7 +81,7 @@ namespace Player
         public bool IsShooting() { return m_isCharging; }
         private void Update()
         {
-            if (m_isCharging && !m_characterMouvement.m_isJumping)
+            if (m_isCharging && !m_characterJump.isJumping)
             {
                 playerUI.FillStrikeImage(m_charginTimer / chargeTime);
                 m_charginTimer += Time.deltaTime;
@@ -121,12 +123,12 @@ namespace Player
         }
         public void LaunchStrike(StrikeType isHitScanStrike = StrikeType.Normal)
         {
-            if (m_characterMouvement.m_isJumping) return;
+            if (m_characterJump.isJumping) return;
             BallBehavior ballBehavior = null;
 
             if (CheckBallCollison(ref ballBehavior))
             {
-                if (isHitScanStrike == StrikeType.Normal && m_characterMouvement.m_isJumping) return;
+                if (isHitScanStrike == StrikeType.Normal && m_characterJump.isJumping) return;
                 float angle = GetShootAngle();
                 Vector3 direction = GetShootDirection(angle, ballBehavior.transform.position); ;
                 ballBehavior.Strike(direction, (PlayerID)m_playerInput.playerIndex, m_charginTimer / chargeTime);

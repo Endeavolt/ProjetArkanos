@@ -7,56 +7,44 @@ using UnityEngine.InputSystem;
 
 namespace Player
 {
-    public class CharacterMouvement : MonoBehaviour
+    public class CharacterMouvement : MonoBehaviour,CharacterControlsInterface
     {
 
         [Header("Control")]
         public bool ActiveAnalogigDirection;
         public float speed = 5;
-        public float jumpSpeed = 25;
-        public float shakeTime = .5f;
         [Header("Debug")]
         public bool activeDebug = false;
 
         public LayerMask layer;
-        public LayerMask hitScanLayerMask;
 
         public Vector3 m_directionInput;
         public Vector3 m_directionJump;
         private Vector3 m_direction;
 
-        public bool m_isJumping;
-        private Vector3 m_jumpDirection;
         private bool m_rightSide = false;
-
-        private float m_debugJumpTime;
-        private float m_debugJumpDistance;
-        private Vector3 m_debugJumpDir;
         
-        private CameraShake m_cameraShake;
-        private CapsuleCollider m_capsuleCollider;
-        private CharacterShoot m_characterShoot;
         private CharacterJump m_characterJump;
         private BallBehavior m_ballBehavior;
-        private bool m_HasExtraJump;
-        [HideInInspector]
         public General.HitScanStrikeManager hitScanStrikeManager;
-        public float hitScanWaitTime = 0.3f;
-       
+        private bool _isControlActive = false;
 
         public void Start()
         {
-            m_characterShoot = GetComponent<CharacterShoot>();
-            m_capsuleCollider = GetComponent<CapsuleCollider>();
             m_characterJump = GetComponent<CharacterJump>();
+        }
+
+        public void ChangeControl(bool state)
+        {
+            _isControlActive = state;
         }
 
         #region InputPlayer
 
         public void MouvementInput(InputAction.CallbackContext ctx)
         {
-            if (ctx.performed) m_directionJump = ctx.ReadValue<Vector2>();
-            if (ctx.canceled) m_directionJump = ctx.ReadValue<Vector2>();
+            if (ctx.performed &&_isControlActive) m_directionJump = ctx.ReadValue<Vector2>();
+            if (ctx.canceled && _isControlActive) m_directionJump = ctx.ReadValue<Vector2>();
             m_directionInput = m_directionJump;
         }
 
@@ -179,16 +167,6 @@ namespace Player
             return Physics.Raycast(transform.position, direction, out hit, distance, layer);
         }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Debug.DrawRay(transform.position, new Vector3(m_debugJumpDir.x, m_debugJumpDir.y, 0).normalized * 100);
-
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(transform.position + Vector3.up * 0.5f, 0.1f);
-            Gizmos.DrawSphere(transform.position + -Vector3.up * 0.5f, 0.1f);
-            //Gizmos.DrawMesh(m_meshFilter.mesh, transform.position + new Vector3(m_debugJumpDir.x, m_debugJumpDir.y, 0).normalized * 10.0f) ;
-
-        }
+    
     }
 }

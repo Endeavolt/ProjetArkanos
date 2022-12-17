@@ -29,9 +29,13 @@ public class GameManager : MonoBehaviour
     public float sphereRadius = 1.0f;
     public bool IsPlayerNumberSecurity = true;
 
+    private float m_gameTimer;
+    private float m_gameTime = 3;
+    private bool m_gameIsLaunch = false;
     private PlayerInputManager m_playerInputManager;
     private int m_playerNumber = 4;
     private int m_currentPlayerNumber;
+    private PlayerInput[] players = new PlayerInput[PLAYER_MAX];
     List<InputDevice> devices = new List<InputDevice>();
 
     public Player_AssetData m_playerAsset; //Add player vfx Setting
@@ -51,19 +55,50 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+        if (!m_gameIsLaunch)
+        {
+            if (m_gameTimer > m_gameTime)
+            {
+                LaunchGame();
+                generalUI.SetTextStartTimer(m_gameTime - m_gameTimer, false);
+                m_gameIsLaunch = true;
+            }
+            else
+            {
+                m_gameTimer += Time.deltaTime;
+                generalUI.SetTextStartTimer(m_gameTime - m_gameTimer, true);
+
+            }
+        }
+    }
+
+    private void LaunchGame()
+    {
+        SpawnBall();
+        for (int i = 0; i < m_currentPlayerNumber; i++)
+        {
+            Player.CharacterControlsInterface[] components = players[i].GetComponents<Player.CharacterControlsInterface>();
+            for (int j = 0; j < components.Length; j++)
+            {
+                components[j].ChangeControl(true);
+            }
+        }
+    }
+
     public void StartGame()
     {
         GetAllDevice();
         RegulatePlayerNumber();
         SpawnPlayers();
-        SpawnBall();
     }
 
     private void SpawnBall()
     {
         GameObject ballGo = GameObject.Instantiate(ball, new Vector3(0, 0, -2.28f), Quaternion.identity);
         BallBehavior behavior = ballGo.GetComponent<BallBehavior>();
-        GetComponent<General.HitScanStrikeManager>().ball  = behavior;
+        GetComponent<General.HitScanStrikeManager>().ball = behavior;
         behavior.gameManager = this;
     }
 
@@ -121,11 +156,13 @@ public class GameManager : MonoBehaviour
     {
         int deviceIndex = GetGampad() == -1 ? GetKeyboard() : GetGampad();
         PlayerInput pInput = m_playerInputManager.JoinPlayer(index, -1, null, GetDevice(deviceIndex));
+        players[index] = pInput;
         m_playerAsset.AssignPlayerParameter(index, pInput.gameObject); //Add player vfx Setting
         pInput.transform.position = spawnPosition[index];
         pInput.GetComponent<MeshRenderer>().material.color = playerColor[index];
         pInput.GetComponent<Player.CharacterShoot>().playerUI = generalUI.GetPlayerUI(index);
         pInput.GetComponent<Player.CharacterMouvement>().hitScanStrikeManager = GetComponent<General.HitScanStrikeManager>();
+        pInput.GetComponent<Player.CharacterJump>().hitScanStrikeManager = GetComponent<General.HitScanStrikeManager>();
 
     }
     public int GetPlayerNumber()

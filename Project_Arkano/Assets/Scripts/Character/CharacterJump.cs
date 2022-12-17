@@ -63,7 +63,7 @@ namespace Player
         /// <param name="ctx"></param>
         public void JumpInputAction(InputAction.CallbackContext ctx)
         {
-            if (ctx.started)
+            if (ctx.started && _isControlActive)
             {
                 Jump();
             }
@@ -71,8 +71,8 @@ namespace Player
 
         public void MouvementInput(InputAction.CallbackContext ctx)
         {
-            if (ctx.performed) _inputDirection = ctx.ReadValue<Vector2>();
-            if (ctx.canceled) _inputDirection = ctx.ReadValue<Vector2>();
+            if (ctx.performed && _isControlActive) _inputDirection = ctx.ReadValue<Vector2>();
+            if (ctx.canceled && _isControlActive) _inputDirection = ctx.ReadValue<Vector2>();
         }
 
         public void SetExtraJump()
